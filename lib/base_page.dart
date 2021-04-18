@@ -29,7 +29,8 @@ class _BaseState extends State<Base> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("RipCoding"), backgroundColor: Colors.lightBlue[900]),
+          leading: Icon(Icons.account_balance_wallet_rounded ),
+          title: Text("Dompet"), backgroundColor: Colors.lightBlue[900]),
       body: PageView(
         controller: _pageController,
         children: _screen,
@@ -42,7 +43,7 @@ class _BaseState extends State<Base> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.home,
+              Icons.account_balance_wallet_outlined,
               color: _selectedIndex == 0 ? Colors.blue : Colors.grey,
             ),
             title: Text("Home",
@@ -51,26 +52,26 @@ class _BaseState extends State<Base> {
           ),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.search,
+                Icons.calculate_outlined,
                 color: _selectedIndex == 1 ? Colors.blue : Colors.grey,
               ),
-              title: Text("Search",
+              title: Text("Budget",
                   style: TextStyle(
                       color: _selectedIndex == 1 ? Colors.blue : Colors.grey))),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.shopping_cart,
+                Icons.monetization_on_outlined,
                 color: _selectedIndex == 2 ? Colors.blue : Colors.grey,
               ),
-              title: Text("Cart",
+              title: Text("Debt",
                   style: TextStyle(
                       color: _selectedIndex == 2 ? Colors.blue : Colors.grey))),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.account_circle,
+                Icons.insert_chart_outlined_rounded,
                 color: _selectedIndex == 3 ? Colors.blue : Colors.grey,
               ),
-              title: Text("My Account",
+              title: Text("Graph",
                   style: TextStyle(
                       color: _selectedIndex == 3 ? Colors.blue : Colors.grey))),
         ],
