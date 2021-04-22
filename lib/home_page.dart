@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+var plus = 0;
+var saldo = 0;
+String ket = "";
 
 class MainPage extends StatefulWidget {
   @override
@@ -8,17 +10,14 @@ class MainPage extends StatefulWidget {
 
 
 class _MainPageState extends State<MainPage> {
-  var plus = 0;
-  var saldo = 0;
-  String ket = "";
+
 
   List<int> nom = [];
   List<String> sym =[];
   List<String> tag =[];
 
 
-  createAlertDialog(BuildContext context) {
-    TextEditingController customController = TextEditingController();
+  inputOutcome(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -66,8 +65,7 @@ class _MainPageState extends State<MainPage> {
         });
   }
 
-  createAlertDialog2(BuildContext context) {
-    TextEditingController customController = TextEditingController();
+  inputIncome(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -117,32 +115,29 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(children: <Widget>[
-        Flexible(
-          flex: 3,
-          child: Container(
+       Container(
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(left: 15),
-            height: double.infinity,
+            height: 100,
             width: double.infinity,
-            color: Colors.white,
+            color: Colors.black12,
             child: Text(
               "Rp " + saldo.toString() + ",-",
               style: TextStyle(fontSize: 30),
             ),
           ),
-        ),
-        Flexible(
-            flex: 2,
-            child: Row(
+
+
+            Row(
               children: <Widget>[
                 Flexible(
                     flex: 2,
                     child: ButtonTheme(
                       minWidth: double.infinity,
-                      height: double.infinity,
+                      height: 50,
                       child: RaisedButton(
                         onPressed: () {
-                          createAlertDialog2(context);
+                          inputIncome(context);
                         },
                         child: Text("+"),
                         color: Colors.green,
@@ -152,28 +147,27 @@ class _MainPageState extends State<MainPage> {
                     flex: 2,
                     child: ButtonTheme(
                       minWidth: double.infinity,
-                      height: double.infinity,
+                      height: 50,
                       child: RaisedButton(
                         onPressed: () {
-                          createAlertDialog(context);
+                          inputOutcome(context);
                         },
                         child: Text("-"),
                         color: Colors.red,
                       ),
                     ))
               ],
-            )),
-        Flexible(
-          flex: 2,
-          child: Container(
+            ),
+      Container(
+        height: 50,
             alignment: Alignment.center,
             child: Text("Transaksi terakhir",
                 style: TextStyle(fontSize: 20, color: Colors.white)),
             color: Colors.black,
           ),
-        ),
+
         Flexible(
-            flex: 18,
+            flex: 1,
             child: ListView.builder(
 
                 padding: const EdgeInsets.all(8),
