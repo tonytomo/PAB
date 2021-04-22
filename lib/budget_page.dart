@@ -7,19 +7,19 @@ class Budget extends StatefulWidget {
 }
 
 class Cash {
-  Cash(this.nomBudget, this.ketBudget, this.symBudget);
+  Cash(this._nomBudget, this._ketBudget, this._symBudget);
 
-  int nomBudget;
-  String ketBudget;
-  String symBudget;
+  int _nomBudget;
+  String _ketBudget;
+  String _symBudget;
 }
 
 class _BudgetState extends State<Budget> {
-  List<Cash> budgetDaily = [];
-  List<Cash> budgetWeekly = [];
-  List<Cash> budgetMonthly = [];
-  String valueChoose;
-  List periode = ["Daily", "Weekly", "Monthly"];
+  List<Cash> _budgetDaily = [];
+  List<Cash> _budgetWeekly = [];
+  List<Cash> _budgetMonthly = [];
+  String _valueChoose;
+  List _periode = ["Daily", "Weekly", "Monthly"];
 
   _edit(String period, BuildContext context, int index) {
     return showDialog(
@@ -55,17 +55,17 @@ class _BudgetState extends State<Budget> {
                   Navigator.of(context).pop();
                   setState(() {});
                   if (period == "Daily"){
-                    budgetDaily[index].nomBudget=plus;
-                    budgetDaily[index].ketBudget=ket;}
+                    _budgetDaily[index]._nomBudget=plus;
+                    _budgetDaily[index]._ketBudget=ket;}
                   //  budgetDaily.add(Cash(plus, ket, "+"));
                   else if (period == "Weekly")
                   {
-                    budgetWeekly[index].nomBudget=plus;
-                    budgetWeekly[index].ketBudget=ket;}
+                    _budgetWeekly[index]._nomBudget=plus;
+                    _budgetWeekly[index]._ketBudget=ket;}
                   else if (period == "Monthly")
                   {
-                    budgetMonthly[index].nomBudget=plus;
-                    budgetMonthly[index].ketBudget=ket;}
+                    _budgetMonthly[index]._nomBudget=plus;
+                    _budgetMonthly[index]._ketBudget=ket;}
                 },
               )
             ],
@@ -74,19 +74,19 @@ class _BudgetState extends State<Budget> {
   }
 
   _deleteDaily(int index) {
-    budgetDaily.removeAt(index);
+    _budgetDaily.removeAt(index);
     setState(() {});
   }
 
 
   _deleteWeekly(int index) {
-    budgetWeekly.removeAt(index);
+    _budgetWeekly.removeAt(index);
     setState(() {});
   }
 
 
   _deleteMonthly(int index) {
-    budgetMonthly.removeAt(index);
+    _budgetMonthly.removeAt(index);
     setState(() {});
   }
 
@@ -117,13 +117,13 @@ class _BudgetState extends State<Budget> {
                 ),
                 DropdownButtonFormField(
                   hint: Text("Periode"),
-                  value: valueChoose,
+                  value: _valueChoose,
                   onChanged: (newValue) {
                     setState(() {
-                      valueChoose = newValue;
+                      _valueChoose = newValue;
                     });
                   },
-                  items: periode.map((valueItem) {
+                  items: _periode.map((valueItem) {
                     return DropdownMenuItem(
                       value: valueItem,
                       child: Text(valueItem),
@@ -138,12 +138,12 @@ class _BudgetState extends State<Budget> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    if (valueChoose == "Daily")
-                      budgetDaily.add(Cash(plus, ket, "+"));
-                    else if (valueChoose == "Weekly")
-                      budgetWeekly.add(Cash(plus, ket, "+"));
-                    else if (valueChoose == "Monthly")
-                      budgetMonthly.add(Cash(plus, ket, "+"));
+                    if (_valueChoose == "Daily")
+                      _budgetDaily.add(Cash(plus, ket, "+"));
+                    else if (_valueChoose == "Weekly")
+                      _budgetWeekly.add(Cash(plus, ket, "+"));
+                    else if (_valueChoose == "Monthly")
+                      _budgetMonthly.add(Cash(plus, ket, "+"));
                   });
                 },
               )
@@ -179,13 +179,13 @@ class _BudgetState extends State<Budget> {
                 ),
                 DropdownButtonFormField(
                   hint: Text("Periode"),
-                  value: valueChoose,
+                  value: _valueChoose,
                   onChanged: (newValue) {
                     setState(() {
-                      valueChoose = newValue;
+                      _valueChoose = newValue;
                     });
                   },
-                  items: periode.map((valueItem) {
+                  items: _periode.map((valueItem) {
                     return DropdownMenuItem(
                       value: valueItem,
                       child: Text(valueItem),
@@ -200,12 +200,12 @@ class _BudgetState extends State<Budget> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    if (valueChoose == "Daily")
-                      budgetDaily.add(Cash(plus, ket, "-"));
-                    else if (valueChoose == "Weekly")
-                      budgetWeekly.add(Cash(plus, ket, "-"));
-                    else if (valueChoose == "Monthly")
-                      budgetMonthly.add(Cash(plus, ket, "-"));
+                    if (_valueChoose == "Daily")
+                      _budgetDaily.add(Cash(plus, ket, "-"));
+                    else if (_valueChoose == "Weekly")
+                      _budgetWeekly.add(Cash(plus, ket, "-"));
+                    else if (_valueChoose == "Monthly")
+                      _budgetMonthly.add(Cash(plus, ket, "-"));
                   });
                 },
               )
@@ -228,7 +228,7 @@ class _BudgetState extends State<Budget> {
                 child: RaisedButton(
                   onPressed: () {
                     inputIncomePeriodly(context);
-                    print(budgetDaily[0].nomBudget);
+                    print(_budgetDaily[0]._nomBudget);
                   },
                   child: Text("+"),
                   color: Colors.green,
@@ -260,9 +260,9 @@ class _BudgetState extends State<Budget> {
             child: ListView.builder(
                 padding: const EdgeInsets.all(8),
                 //   reverse: true,
-                itemCount: budgetDaily.length,
+                itemCount: _budgetDaily.length,
                 itemBuilder: (context, index) {
-                  int newIndex = budgetDaily.length - 1 - index;
+                  int newIndex = _budgetDaily.length - 1 - index;
                   String period = "Daily";
                   return GestureDetector(
                     onLongPress: () => _edit(period,context, newIndex),
@@ -274,10 +274,10 @@ class _BudgetState extends State<Budget> {
                         height: 50,
                         margin: EdgeInsets.all(2),
                         child: Text(
-                          "${budgetDaily[newIndex].symBudget} ${budgetDaily[newIndex].nomBudget} ${budgetDaily[newIndex].ketBudget}",
+                          "${_budgetDaily[newIndex]._symBudget} ${_budgetDaily[newIndex]._nomBudget} ${_budgetDaily[newIndex]._ketBudget}",
                           style: TextStyle(
                               fontSize: 20,
-                              color: budgetDaily[newIndex].symBudget == "+"
+                              color: _budgetDaily[newIndex]._symBudget == "+"
                                   ? Colors.green
                                   : Colors.red),
                         )),
@@ -295,9 +295,9 @@ class _BudgetState extends State<Budget> {
             child: ListView.builder(
                 padding: const EdgeInsets.all(8),
                 //   reverse: true,
-                itemCount: budgetWeekly.length,
+                itemCount: _budgetWeekly.length,
                 itemBuilder: (context, index) {
-                  int newIndex = budgetWeekly.length - 1 - index;
+                  int newIndex = _budgetWeekly.length - 1 - index;
                   String period="Weekly";
                   return GestureDetector(
                     onLongPress: () => _edit(period,context, newIndex),
@@ -309,10 +309,10 @@ class _BudgetState extends State<Budget> {
                         height: 50,
                         margin: EdgeInsets.all(2),
                         child: Text(
-                          "${budgetWeekly[newIndex].symBudget} ${budgetWeekly[newIndex].nomBudget} ${budgetWeekly[newIndex].ketBudget}",
+                          "${_budgetWeekly[newIndex]._symBudget} ${_budgetWeekly[newIndex]._nomBudget} ${_budgetWeekly[newIndex]._ketBudget}",
                           style: TextStyle(
                               fontSize: 20,
-                              color: budgetWeekly[newIndex].symBudget == "+"
+                              color: _budgetWeekly[newIndex]._symBudget == "+"
                                   ? Colors.green
                                   : Colors.red),
                         )),
@@ -329,9 +329,9 @@ class _BudgetState extends State<Budget> {
             child: ListView.builder(
                 padding: const EdgeInsets.all(8),
                 //   reverse: true,
-                itemCount: budgetMonthly.length,
+                itemCount: _budgetMonthly.length,
                 itemBuilder: (context, index) {
-                  int newIndex = budgetMonthly.length - 1 - index;
+                  int newIndex = _budgetMonthly.length - 1 - index;
                   String period = "Monthly";
                   return GestureDetector(
                     onLongPress: () => _edit(period,context, newIndex),
@@ -343,10 +343,10 @@ class _BudgetState extends State<Budget> {
                         height: 50,
                         margin: EdgeInsets.all(2),
                         child: Text(
-                          "${budgetMonthly[newIndex].symBudget} ${budgetMonthly[newIndex].nomBudget} ${budgetMonthly[newIndex].ketBudget}",
+                          "${_budgetMonthly[newIndex]._symBudget} ${_budgetMonthly[newIndex]._nomBudget} ${_budgetMonthly[newIndex]._ketBudget}",
                           style: TextStyle(
                               fontSize: 20,
-                              color: budgetMonthly[newIndex].symBudget == "+"
+                              color: _budgetMonthly[newIndex]._symBudget == "+"
                                   ? Colors.green
                                   : Colors.red),
                         )),

@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
-var plus = 0;
-var saldo = 0;
-String ket = "";
+
+var plus=0;
+
+var saldo=0;
+
+String ket="";
 
 class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
 }
 
+class History {
+  History(this._nom, this._ket, this._sym);
+
+  int _nom;
+  String _sym;
+  String _ket;
+}
 
 class _MainPageState extends State<MainPage> {
-
-
-  List<int> nom = [];
-  List<String> sym =[];
-  List<String> tag =[];
-
+  List<History> _history = [];
 
   inputOutcome(BuildContext context) {
     return showDialog(
@@ -50,13 +55,8 @@ class _MainPageState extends State<MainPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-
                     saldo = saldo - plus;
-                    nom.add(plus);
-                    tag.add(ket);
-                    sym.add("-");
-
-
+                    _history.add(History(plus, ket, "-"));
                   });
                 },
               )
@@ -99,9 +99,7 @@ class _MainPageState extends State<MainPage> {
                   Navigator.of(context).pop();
                   setState(() {
                     saldo = saldo + plus;
-                    nom.add(plus);
-                    tag.add("( $ket )");
-                    sym.add("+");
+                    _history.add(History(plus, ket, "+"));
                   });
                 },
               )
@@ -110,83 +108,82 @@ class _MainPageState extends State<MainPage> {
         });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(children: <Widget>[
-       Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: 15),
-            height: 100,
-            width: double.infinity,
-            color: Colors.black12,
-            child: Text(
-              "Rp " + saldo.toString() + ",-",
-              style: TextStyle(fontSize: 30),
-            ),
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(left: 15),
+          height: 100,
+          width: double.infinity,
+          color: Colors.black12,
+          child: Text(
+            "Rp " + saldo.toString() + ",-",
+            style: TextStyle(fontSize: 30),
           ),
-
-
-            Row(
-              children: <Widget>[
-                Flexible(
-                    flex: 2,
-                    child: ButtonTheme(
-                      minWidth: double.infinity,
-                      height: 50,
-                      child: RaisedButton(
-                        onPressed: () {
-                          inputIncome(context);
-                        },
-                        child: Text("+"),
-                        color: Colors.green,
-                      ),
-                    )),
-                Flexible(
-                    flex: 2,
-                    child: ButtonTheme(
-                      minWidth: double.infinity,
-                      height: 50,
-                      child: RaisedButton(
-                        onPressed: () {
-                          inputOutcome(context);
-                        },
-                        child: Text("-"),
-                        color: Colors.red,
-                      ),
-                    ))
-              ],
-            ),
-      Container(
-        height: 50,
-            alignment: Alignment.center,
-            child: Text("Transaksi terakhir",
-                style: TextStyle(fontSize: 20, color: Colors.white)),
-            color: Colors.black,
-          ),
-
+        ),
+        Row(
+          children: <Widget>[
+            Flexible(
+                flex: 2,
+                child: ButtonTheme(
+                  minWidth: double.infinity,
+                  height: 50,
+                  child: RaisedButton(
+                    onPressed: () {
+                      inputIncome(context);
+                    },
+                    child: Text("+"),
+                    color: Colors.green,
+                  ),
+                )),
+            Flexible(
+                flex: 2,
+                child: ButtonTheme(
+                  minWidth: double.infinity,
+                  height: 50,
+                  child: RaisedButton(
+                    onPressed: () {
+                      inputOutcome(context);
+                    },
+                    child: Text("-"),
+                    color: Colors.red,
+                  ),
+                ))
+          ],
+        ),
+        Container(
+          height: 50,
+          alignment: Alignment.center,
+          child: Text("Transaksi terakhir",
+              style: TextStyle(fontSize: 20, color: Colors.white)),
+          color: Colors.black,
+        ),
         Flexible(
             flex: 1,
             child: ListView.builder(
-
                 padding: const EdgeInsets.all(8),
                 //   reverse: true,
-                itemCount: nom.length < 10 ? nom.length : 10,
+                itemCount: _history.length < 10 ? _history.length : 10,
                 itemBuilder: (context, index) {
-                  int newIndex=nom.length-1-index;
+                  int newIndex = _history.length - 1 - index;
                   return Container(
                       alignment: Alignment.centerLeft,
                       color: Colors.black12,
                       padding: EdgeInsets.all(8),
                       height: 50,
                       margin: EdgeInsets.all(2),
-                      child: Text("${sym[newIndex]} ${nom[newIndex]} ${tag[newIndex]}",style: TextStyle(fontSize: 20 ,color: sym[newIndex] == "+" ? Colors.green : Colors.red), ));
+                      child: Text(
+                        "${_history[newIndex]._sym} ${_history[newIndex]._nom} ${_history[newIndex]._ket}",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: _history[newIndex]._sym == "+"
+                                ? Colors.green
+                                : Colors.red),
+                      ));
                 }))
       ]),
     );
   }
 }
-
-
-
