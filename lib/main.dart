@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: "Coba Aja",
+        theme: ThemeData(fontFamily: 'Oswald'),
         home: Base()
     );
   }

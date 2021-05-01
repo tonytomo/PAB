@@ -30,7 +30,7 @@ class _BaseState extends State<Base> {
     return Scaffold(
       appBar: AppBar(
           leading: Icon(Icons.account_balance_wallet_rounded ),
-          title: Text("Dompet"), backgroundColor: Colors.lightBlue[900]),
+          title: Text("Dompet"), backgroundColor: Colors.teal[700]),
       body: PageView(
         controller: _pageController,
         children: _screen,

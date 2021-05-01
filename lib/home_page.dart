@@ -51,7 +51,12 @@ class _MainPageState extends State<MainPage> {
             ),
             actions: <Widget>[
               MaterialButton(
-                child: Text("Simpan"),
+                child: Text("Simpan",
+                style: TextStyle(
+                  color: Colors.white,
+                ),),
+                padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                color: Colors.teal[700],
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
@@ -94,7 +99,12 @@ class _MainPageState extends State<MainPage> {
             ),
             actions: <Widget>[
               MaterialButton(
-                child: Text("Simpan"),
+                child: Text("Simpan",
+                style: TextStyle(
+                  color: Colors.white,
+                ),),
+                padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                color: Colors.teal[700],
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
@@ -134,8 +144,12 @@ class _MainPageState extends State<MainPage> {
                     onPressed: () {
                       inputIncome(context);
                     },
-                    child: Text("+"),
-                    color: Colors.green,
+                    child: Text("+",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                    ),),
+                    color: Colors.teal[700],
                   ),
                 )),
             Flexible(
@@ -147,8 +161,12 @@ class _MainPageState extends State<MainPage> {
                     onPressed: () {
                       inputOutcome(context);
                     },
-                    child: Text("-"),
-                    color: Colors.red,
+                    child: Text("-",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                    ),),
+                    color: Colors.teal[800],
                   ),
                 ))
           ],
@@ -157,7 +175,11 @@ class _MainPageState extends State<MainPage> {
           height: 50,
           alignment: Alignment.center,
           child: Text("Transaksi terakhir",
-              style: TextStyle(fontSize: 20, color: Colors.white)),
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontStyle: FontStyle.italic,
+              ),),
           color: Colors.black,
         ),
         Flexible(
@@ -174,14 +196,45 @@ class _MainPageState extends State<MainPage> {
                       padding: EdgeInsets.all(8),
                       height: 50,
                       margin: EdgeInsets.all(2),
-                      child: Text(
-                        "${_history[newIndex]._sym} ${_history[newIndex]._nom} ${_history[newIndex]._ket}",
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: _history[newIndex]._sym == "+"
-                                ? Colors.green
-                                : Colors.red),
-                      ));
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: _history[newIndex]._sym == "+"
+                                  ? Colors.teal[700]
+                                  : Colors.red[700],
+                            ),
+                            child: Text( _history[newIndex]._sym == "+"
+                              ? "+"
+                              : "-",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white
+                              ),
+                            ),
+                            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          ),
+                          Container(
+                            child: Text(
+                              " ${_history[newIndex]._nom}",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Text(
+                              " | ${_history[newIndex]._ket}",
+                              style: TextStyle(
+                                fontSize: 20
+                              ),
+                            )
+                          )
+                        ],
+                      )
+                  );
                 }))
       ]),
     );

@@ -26,27 +26,29 @@ class _BudgetState extends State<Budget> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Masukan Jumlah Pemasukan"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Pemasukan',
+            title: Text("Edit Budget"),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Nominal',
+                    ),
+                    onChanged: (String value) {
+                      plus = int.parse(value);
+                    },
                   ),
-                  onChanged: (String value) {
-                    plus = int.parse(value);
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Keterangan',
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Keterangan',
+                    ),
+                    onChanged: (String value2) {
+                      ket = value2;
+                    },
                   ),
-                  onChanged: (String value2) {
-                    ket = value2;
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
             actions: <Widget>[
               MaterialButton(
@@ -96,41 +98,43 @@ class _BudgetState extends State<Budget> {
         builder: (context) {
           return AlertDialog(
             title: Text("Masukan Jumlah Pemasukan"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Pemasukan',
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Pemasukan',
+                    ),
+                    onChanged: (String value) {
+                      plus = int.parse(value);
+                    },
                   ),
-                  onChanged: (String value) {
-                    plus = int.parse(value);
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Keterangan',
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Keterangan',
+                    ),
+                    onChanged: (String value2) {
+                      ket = value2;
+                    },
                   ),
-                  onChanged: (String value2) {
-                    ket = value2;
-                  },
-                ),
-                DropdownButtonFormField(
-                  hint: Text("Periode"),
-                  value: _valueChoose,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _valueChoose = newValue;
-                    });
-                  },
-                  items: _periode.map((valueItem) {
-                    return DropdownMenuItem(
-                      value: valueItem,
-                      child: Text(valueItem),
-                    );
-                  }).toList(),
-                )
-              ],
+                  DropdownButtonFormField(
+                    hint: Text("Periode"),
+                    value: _valueChoose,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _valueChoose = newValue;
+                      });
+                    },
+                    items: _periode.map((valueItem) {
+                      return DropdownMenuItem(
+                        value: valueItem,
+                        child: Text(valueItem),
+                      );
+                    }).toList(),
+                  )
+                ],
+              ),
             ),
             actions: <Widget>[
               MaterialButton(
@@ -157,42 +161,44 @@ class _BudgetState extends State<Budget> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Masukan Jumlah Pemasukan"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Pemasukan',
+            title: Text("Masukan Budget Pengeluaran"),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Pengeluaran',
+                    ),
+                    onChanged: (String value) {
+                      plus = int.parse(value);
+                    },
                   ),
-                  onChanged: (String value) {
-                    plus = int.parse(value);
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Keterangan',
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Keterangan',
+                    ),
+                    onChanged: (String value2) {
+                      ket = value2;
+                    },
                   ),
-                  onChanged: (String value2) {
-                    ket = value2;
-                  },
-                ),
-                DropdownButtonFormField(
-                  hint: Text("Periode"),
-                  value: _valueChoose,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _valueChoose = newValue;
-                    });
-                  },
-                  items: _periode.map((valueItem) {
-                    return DropdownMenuItem(
-                      value: valueItem,
-                      child: Text(valueItem),
-                    );
-                  }).toList(),
-                )
-              ],
+                  DropdownButtonFormField(
+                    hint: Text("Periode"),
+                    value: _valueChoose,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _valueChoose = newValue;
+                      });
+                    },
+                    items: _periode.map((valueItem) {
+                      return DropdownMenuItem(
+                        value: valueItem,
+                        child: Text(valueItem),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
             ),
             actions: <Widget>[
               MaterialButton(
@@ -217,6 +223,7 @@ class _BudgetState extends State<Budget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
         body: Column(children: <Widget>[
       Row(
         children: <Widget>[
@@ -230,8 +237,12 @@ class _BudgetState extends State<Budget> {
                     inputIncomePeriodly(context);
                     print(_budgetDaily[0]._nomBudget);
                   },
-                  child: Text("+"),
-                  color: Colors.green,
+                  child: Text("+",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30
+                  ),),
+                  color: Colors.teal[700],
                 ),
               )),
           Flexible(
@@ -243,17 +254,26 @@ class _BudgetState extends State<Budget> {
                   onPressed: () {
                     inputOutcomePeriodly(context);
                   },
-                  child: Text("-"),
-                  color: Colors.red,
+                  child: Text("-",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30
+                  ),),
+                  color: Colors.teal[800],
                 ),
               )),
         ],
       ),
       Container(
           height: 50,
-          color: Colors.grey,
+          color: Colors.black,
           alignment: Alignment.center,
-          child: Text("Per Hari", style: TextStyle(fontSize: 20))),
+          child: Text("Per-Hari",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+                fontStyle: FontStyle.italic
+              ))),
       Flexible(
         flex: 1,
         child: Container(
@@ -278,17 +298,22 @@ class _BudgetState extends State<Budget> {
                           style: TextStyle(
                               fontSize: 20,
                               color: _budgetDaily[newIndex]._symBudget == "+"
-                                  ? Colors.green
-                                  : Colors.red),
+                                  ? Colors.teal[700]
+                                  : Colors.red[700]),
                         )),
                   );
                 })),
       ),
       Container(
           height: 50,
-          color: Colors.grey,
+          color: Colors.black,
           alignment: Alignment.center,
-          child: Text("Per Minggu", style: TextStyle(fontSize: 20))),
+          child: Text("Per-Minggu",
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontStyle: FontStyle.italic
+              ))),
       Flexible(
         flex: 1,
         child: Container(
@@ -313,17 +338,22 @@ class _BudgetState extends State<Budget> {
                           style: TextStyle(
                               fontSize: 20,
                               color: _budgetWeekly[newIndex]._symBudget == "+"
-                                  ? Colors.green
-                                  : Colors.red),
+                                  ? Colors.teal[700]
+                                  : Colors.red[700]),
                         )),
                   );
                 })),
       ),
       Container(
           height: 50,
-          color: Colors.grey,
+          color: Colors.black,
           alignment: Alignment.center,
-          child: Text("Per Bulan", style: TextStyle(fontSize: 20))),
+          child: Text("Per-Bulan",
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontStyle: FontStyle.italic
+              ))),
       Flexible(
         child: Container(
             child: ListView.builder(
@@ -347,8 +377,8 @@ class _BudgetState extends State<Budget> {
                           style: TextStyle(
                               fontSize: 20,
                               color: _budgetMonthly[newIndex]._symBudget == "+"
-                                  ? Colors.green
-                                  : Colors.red),
+                                  ? Colors.teal[700]
+                                  : Colors.red[700]),
                         )),
                   );
                 })),
