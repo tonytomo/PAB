@@ -28,9 +28,6 @@ class _BaseState extends State<Base> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          leading: Icon(Icons.account_balance_wallet_rounded ),
-          title: Text("Dompet"), backgroundColor: Colors.teal[700]),
       body: PageView(
         controller: _pageController,
         children: _screen,
@@ -44,36 +41,39 @@ class _BaseState extends State<Base> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.account_balance_wallet_outlined,
-              color: _selectedIndex == 0 ? Colors.blue : Colors.grey,
+              color: _selectedIndex == 0 ? Colors.teal[700] : Colors.grey[400],
             ),
             title: Text("Home",
                 style: TextStyle(
-                    color: _selectedIndex == 0 ? Colors.blue : Colors.grey)),
+                    color: _selectedIndex == 0 ? Colors.teal[700] : Colors.grey[400])),
           ),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.calculate_outlined,
-                color: _selectedIndex == 1 ? Colors.blue : Colors.grey,
+                color: _selectedIndex == 1 ? Colors.teal[700] : Colors.grey[400],
               ),
               title: Text("Budget",
                   style: TextStyle(
-                      color: _selectedIndex == 1 ? Colors.blue : Colors.grey))),
+                      color: _selectedIndex == 1 ? Colors.teal[700] : Colors.grey[400])),
+          ),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.monetization_on_outlined,
-                color: _selectedIndex == 2 ? Colors.blue : Colors.grey,
+                color: _selectedIndex == 2 ? Colors.teal[700] : Colors.grey[400],
               ),
               title: Text("Debt",
                   style: TextStyle(
-                      color: _selectedIndex == 2 ? Colors.blue : Colors.grey))),
+                      color: _selectedIndex == 2 ? Colors.teal[700] : Colors.grey[400])),
+            ),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.insert_chart_outlined_rounded,
-                color: _selectedIndex == 3 ? Colors.blue : Colors.grey,
+                color: _selectedIndex == 3 ? Colors.teal[700] : Colors.grey[400],
               ),
               title: Text("Graph",
                   style: TextStyle(
-                      color: _selectedIndex == 3 ? Colors.blue : Colors.grey))),
+                      color: _selectedIndex == 3 ? Colors.teal[700] : Colors.grey[400])),
+          ),
         ],
       ),
     );

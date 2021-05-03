@@ -32,6 +32,7 @@ class _MainPageState extends State<MainPage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 TextField(
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Pengeluaran',
                   ),
@@ -62,6 +63,8 @@ class _MainPageState extends State<MainPage> {
                   setState(() {
                     saldo = saldo - plus;
                     _history.add(History(plus, ket, "-"));
+                    plus = null;
+                    ket = null;
                   });
                 },
               )
@@ -80,6 +83,7 @@ class _MainPageState extends State<MainPage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 TextField(
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Pemasukan',
                   ),
@@ -110,6 +114,8 @@ class _MainPageState extends State<MainPage> {
                   setState(() {
                     saldo = saldo + plus;
                     _history.add(History(plus, ket, "+"));
+                    plus = null;
+                    ket = null;
                   });
                 },
               )
@@ -121,6 +127,9 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          leading: Icon(Icons.account_balance_wallet_rounded ),
+          title: Text("DompetAja"), backgroundColor: Colors.teal[700]),
       body: Column(children: <Widget>[
         Container(
           alignment: Alignment.centerLeft,
@@ -166,7 +175,7 @@ class _MainPageState extends State<MainPage> {
                         color: Colors.white,
                         fontSize: 30,
                     ),),
-                    color: Colors.teal[800],
+                    color: Colors.red[900],
                   ),
                 ))
           ],
@@ -205,15 +214,12 @@ class _MainPageState extends State<MainPage> {
                                   ? Colors.teal[700]
                                   : Colors.red[700],
                             ),
-                            child: Text( _history[newIndex]._sym == "+"
-                              ? "+"
-                              : "-",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white
-                              ),
+                            child: Icon( _history[newIndex]._sym == "+"
+                              ? Icons.add
+                              : Icons.remove,
+                              color: Colors.white,
                             ),
-                            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
                           ),
                           Container(
                             child: Text(
