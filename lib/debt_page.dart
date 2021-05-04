@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'ExpansionTile_alt.dart';
 import 'home_page.dart';
@@ -52,7 +53,8 @@ class _DebtState extends State<Debt> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    _debt.add(Debts(ket, plus, "+"));
+                    if(plus != null && ket != null)
+                      _debt.add(Debts(ket, plus, "+"));
 
                     plus = null;
                     ket = null;
@@ -98,7 +100,8 @@ class _DebtState extends State<Debt> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    _debt.add(Debts(ket, plus, "-"));
+                    if(plus != null && ket != null)
+                      _debt.add(Debts(ket, plus, "-"));
 
                     plus = null;
                     ket = null;
@@ -122,9 +125,7 @@ class _DebtState extends State<Debt> {
                   MaterialButton(
                     child: Text(
                       "Tidak",
-                      style: TextStyle(
-                        color: Colors.teal[700],
-                      ),
+                      style: TextStyle(color: Colors.teal[700], fontSize: 17),
                     ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
@@ -134,9 +135,7 @@ class _DebtState extends State<Debt> {
                   MaterialButton(
                     child: Text(
                       "Iya",
-                      style: TextStyle(
-                        color: Colors.red[700],
-                      ),
+                      style: TextStyle(color: Colors.red[700], fontSize: 17),
                     ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
@@ -205,14 +204,11 @@ class _DebtState extends State<Debt> {
                         height: 0,
                       ),
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                  //   reverse: true,
                   itemCount: _debt.length,
                   itemBuilder: (context, index) {
                     int newIndex = _debt.length - 1 - index;
-                    // String period = "Daily";
                     return Column(
                       children: <Widget>[
                         MyExpansionTile(
@@ -224,10 +220,26 @@ class _DebtState extends State<Debt> {
                                 ? Colors.teal[700]
                                 : Colors.red[700],
                           ),
-                          title: Text(
-                            "${_debt[newIndex]._nominal} | ${_debt[newIndex]._nama}",
-                            style: TextStyle(fontSize: 20, color: Colors.black),
-                          ),
+                          title: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    "${_debt[newIndex]._nominal}",
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    "| ${_debt[newIndex]._nama}",
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                  ),
+                                )
+                              ]),
                           backgroundColor: Colors.white70,
                           children: <Widget>[
                             Row(
@@ -242,10 +254,14 @@ class _DebtState extends State<Debt> {
                                           _deleteDebts(newIndex);
                                         },
                                         child: Text(
-                                          "Hapus",
-                                          style: TextStyle(color: Colors.white),
+                                          _debt[newIndex]._jenis == "+"
+                                              ? "Sudah membayar"
+                                              : "Sudah dibayar",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 17),
                                         ),
-                                        color: Colors.red[700],
+                                        color: Colors.grey[700],
                                       ),
                                     )),
                               ],
