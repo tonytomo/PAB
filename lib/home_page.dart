@@ -63,8 +63,10 @@ class _MainPageState extends State<MainPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    saldo = saldo - plus;
-                    _history.add(History(plus, ket, "-"));
+                    if(plus != null && ket != null) {
+                      saldo = saldo - plus;
+                      _history.add(History(plus, ket, "-"));
+                    }
                     plus = null;
                     ket = null;
                   });
@@ -116,8 +118,10 @@ class _MainPageState extends State<MainPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    saldo = saldo + plus;
-                    _history.add(History(plus, ket, "+"));
+                    if(plus != null && ket != null) {
+                      saldo = saldo + plus;
+                      _history.add(History(plus, ket, "+"));
+                    }
                     plus = null;
                     ket = null;
                   });
@@ -217,34 +221,43 @@ class _MainPageState extends State<MainPage> {
                       height: 50,
                       margin: EdgeInsets.all(2),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: _history[newIndex]._sym == "+"
-                                  ? Colors.teal[700]
-                                  : Colors.red[700],
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: _history[newIndex]._sym == "+"
+                                    ? Colors.teal[700]
+                                    : Colors.red[700],
+                              ),
+                              child: Icon(
+                                _history[newIndex]._sym == "+"
+                                    ? Icons.add
+                                    : Icons.remove,
+                                color: Colors.white,
+                              ),
+                              padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
                             ),
-                            child: Icon(
-                              _history[newIndex]._sym == "+"
-                                  ? Icons.add
-                                  : Icons.remove,
-                              color: Colors.white,
-                            ),
-                            padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
                           ),
-                          Container(
+                          Expanded(
+                            flex: 5,
                             child: Text(
                               "   ${_history[newIndex]._nom}",
                               style:
                                   TextStyle(fontSize: 20, color: Colors.black),
                             ),
                           ),
-                          Container(
-                              child: Text(
-                            " | ${_history[newIndex]._ket}",
-                            style: TextStyle(fontSize: 20),
-                          ))
+                          Expanded(
+                              flex: 5,
+                              child: Container(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  " | ${_history[newIndex]._ket}",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ))
                         ],
                       ));
                 }))

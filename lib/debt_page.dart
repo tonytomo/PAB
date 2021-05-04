@@ -221,7 +221,7 @@ class _DebtState extends State<Debt> {
                                 : Colors.red[700],
                           ),
                           title: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Expanded(
                                   flex: 1,
