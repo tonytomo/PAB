@@ -59,17 +59,23 @@ class _BudgetState extends State<Budget> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    if (period == "Daily") {
-                      _budgetDaily[index]._nomBudget = plus;
-                      _budgetDaily[index]._ketBudget = ket;
+                    if (plus != null) {
+                      if (period == "Daily") {
+                        _budgetDaily[index]._nomBudget = plus;
+                      } else if (period == "Weekly") {
+                        _budgetWeekly[index]._nomBudget = plus;
+                      } else if (period == "Monthly") {
+                        _budgetMonthly[index]._nomBudget = plus;
+                      }
                     }
-                    //  budgetDaily.add(Cash(plus, ket, "+"));
-                    else if (period == "Weekly") {
-                      _budgetWeekly[index]._nomBudget = plus;
-                      _budgetWeekly[index]._ketBudget = ket;
-                    } else if (period == "Monthly") {
-                      _budgetMonthly[index]._nomBudget = plus;
-                      _budgetMonthly[index]._ketBudget = ket;
+                    if(ket != null) {
+                      if (period == "Daily") {
+                        _budgetDaily[index]._ketBudget = ket;
+                      } else if (period == "Weekly") {
+                        _budgetWeekly[index]._ketBudget = ket;
+                      } else if (period == "Monthly") {
+                        _budgetMonthly[index]._ketBudget = ket;
+                      }
                     }
                   });
                 },
@@ -256,13 +262,14 @@ class _BudgetState extends State<Budget> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    if (_valueChoose == "Daily")
-                      _budgetDaily.add(Cash(plus, ket, "+"));
-                    else if (_valueChoose == "Weekly")
-                      _budgetWeekly.add(Cash(plus, ket, "+"));
-                    else if (_valueChoose == "Monthly")
-                      _budgetMonthly.add(Cash(plus, ket, "+"));
-
+                    if (plus != null && ket != null && _valueChoose != null) {
+                      if (_valueChoose == "Daily")
+                        _budgetDaily.add(Cash(plus, ket, "+"));
+                      else if (_valueChoose == "Weekly")
+                        _budgetWeekly.add(Cash(plus, ket, "+"));
+                      else if (_valueChoose == "Monthly")
+                        _budgetMonthly.add(Cash(plus, ket, "+"));
+                    }
                     plus = null;
                     ket = null;
                   });
@@ -324,13 +331,14 @@ class _BudgetState extends State<Budget> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    if (_valueChoose == "Daily")
-                      _budgetDaily.add(Cash(plus, ket, "-"));
-                    else if (_valueChoose == "Weekly")
-                      _budgetWeekly.add(Cash(plus, ket, "-"));
-                    else if (_valueChoose == "Monthly")
-                      _budgetMonthly.add(Cash(plus, ket, "-"));
-
+                    if (plus != null && ket != null && _valueChoose != null) {
+                      if (_valueChoose == "Daily")
+                        _budgetDaily.add(Cash(plus, ket, "-"));
+                      else if (_valueChoose == "Weekly")
+                        _budgetWeekly.add(Cash(plus, ket, "-"));
+                      else if (_valueChoose == "Monthly")
+                        _budgetMonthly.add(Cash(plus, ket, "-"));
+                    }
                     plus = null;
                     ket = null;
                   });
@@ -345,7 +353,6 @@ class _BudgetState extends State<Budget> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        // resizeToAvoidBottomPadding : false,
         appBar: AppBar(
             leading: Icon(Icons.calculate_outlined),
             title: Text("Budget"),
@@ -414,8 +421,7 @@ class _BudgetState extends State<Budget> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                      //   reverse: true,
+                      padding: const EdgeInsets.only(bottom: 8),
                       itemCount: _budgetDaily.length,
                       itemBuilder: (context, index) {
                         int newIndex = _budgetDaily.length - 1 - index;
@@ -423,20 +429,63 @@ class _BudgetState extends State<Budget> {
                         return Column(
                           children: <Widget>[
                             MyExpansionTile(
-                              leading: Icon(
-                                _budgetDaily[newIndex]._symBudget == "+"
-                                    ? Icons.add_circle
-                                    : Icons.remove_circle,
-                                color: _budgetDaily[newIndex]._symBudget == "+"
-                                    ? Colors.teal[700]
-                                    : Colors.red[700],
-                              ),
-                              title: Text(
-                                "${_budgetDaily[newIndex]._nomBudget} | ${_budgetDaily[newIndex]._ketBudget}",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
+                              title: Container(
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.all(8),
+                                height: 50,
+                                width: double.infinity,
+                                child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          child: Icon(
+                                            _budgetDaily[newIndex]._symBudget ==
+                                                    "+"
+                                                ? Icons.add_circle
+                                                : Icons.remove_circle,
+                                            color: _budgetDaily[newIndex]
+                                                        ._symBudget ==
+                                                    "+"
+                                                ? Colors.teal[700]
+                                                : Colors.red[700],
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 6,
+                                        child: Text(
+                                          "   ${_budgetDaily[newIndex]._nomBudget}",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "|",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.grey),
+                                            ),
+                                          )),
+                                      Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              "${_budgetDaily[newIndex]._ketBudget}",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.black),
+                                            ),
+                                          ))
+                                    ]),
                               ),
                               backgroundColor: Colors.white,
                               children: <Widget>[
@@ -508,8 +557,7 @@ class _BudgetState extends State<Budget> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                      //   reverse: true,
+                      padding: const EdgeInsets.only(bottom: 8),
                       itemCount: _budgetWeekly.length,
                       itemBuilder: (context, index) {
                         int newIndex = _budgetWeekly.length - 1 - index;
@@ -517,20 +565,64 @@ class _BudgetState extends State<Budget> {
                         return Column(
                           children: <Widget>[
                             MyExpansionTile(
-                              leading: Icon(
-                                _budgetWeekly[newIndex]._symBudget == "+"
-                                    ? Icons.add_circle
-                                    : Icons.remove_circle,
-                                color: _budgetWeekly[newIndex]._symBudget == "+"
-                                    ? Colors.teal[700]
-                                    : Colors.red[700],
+                              title: Container(
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.all(8),
+                                height: 50,
+                                width: double.infinity,
+                                child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          child: Icon(
+                                            _budgetWeekly[newIndex]._symBudget ==
+                                                "+"
+                                                ? Icons.add_circle
+                                                : Icons.remove_circle,
+                                            color: _budgetWeekly[newIndex]
+                                                ._symBudget ==
+                                                "+"
+                                                ? Colors.teal[700]
+                                                : Colors.red[700],
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 6,
+                                        child: Text(
+                                          "   ${_budgetWeekly[newIndex]._nomBudget}",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "|",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.grey),
+                                            ),
+                                          )),
+                                      Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              "${_budgetWeekly[newIndex]._ketBudget}",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.black),
+                                            ),
+                                          ))
+                                    ]),
                               ),
-                              title: Text(
-                                  "${_budgetWeekly[newIndex]._nomBudget} | ${_budgetWeekly[newIndex]._ketBudget}",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.black,
-                                  )),
                               backgroundColor: Colors.white,
                               children: <Widget>[
                                 Row(
@@ -601,8 +693,7 @@ class _BudgetState extends State<Budget> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                      //   reverse: true,
+                      padding: const EdgeInsets.only(bottom: 8),
                       itemCount: _budgetMonthly.length,
                       itemBuilder: (context, index) {
                         int newIndex = _budgetMonthly.length - 1 - index;
@@ -610,21 +701,63 @@ class _BudgetState extends State<Budget> {
                         return Column(
                           children: <Widget>[
                             MyExpansionTile(
-                              leading: Icon(
-                                _budgetMonthly[newIndex]._symBudget == "+"
-                                    ? Icons.add_circle
-                                    : Icons.remove_circle,
-                                color:
-                                    _budgetMonthly[newIndex]._symBudget == "+"
-                                        ? Colors.teal[700]
-                                        : Colors.red[700],
-                              ),
-                              title: Text(
-                                "${_budgetMonthly[newIndex]._nomBudget} | ${_budgetMonthly[newIndex]._ketBudget}",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
+                              title: Container(
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.all(8),
+                                height: 50,
+                                width: double.infinity,
+                                child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          child: Icon(
+                                            _budgetMonthly[newIndex]._symBudget ==
+                                                "+"
+                                                ? Icons.add_circle
+                                                : Icons.remove_circle,
+                                            color: _budgetMonthly[newIndex]
+                                                ._symBudget ==
+                                                "+"
+                                                ? Colors.teal[700]
+                                                : Colors.red[700],
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 6,
+                                        child: Text(
+                                          "   ${_budgetMonthly[newIndex]._nomBudget}",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "|",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.grey),
+                                            ),
+                                          )),
+                                      Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              "${_budgetMonthly[newIndex]._ketBudget}",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.black),
+                                            ),
+                                          ))
+                                    ]),
                               ),
                               backgroundColor: Colors.white,
                               children: <Widget>[

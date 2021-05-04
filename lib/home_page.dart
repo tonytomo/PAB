@@ -242,7 +242,7 @@ class _MainPageState extends State<MainPage> {
                             ),
                           ),
                           Expanded(
-                            flex: 5,
+                            flex: 6,
                             child: Text(
                               "   ${_history[newIndex]._nom}",
                               style:
@@ -250,11 +250,17 @@ class _MainPageState extends State<MainPage> {
                             ),
                           ),
                           Expanded(
-                              flex: 5,
+                              flex: 1,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text("|", style: TextStyle(fontSize: 20,color: Colors.grey),),
+                              )),
+                          Expanded(
+                              flex: 3,
                               child: Container(
                                 alignment: Alignment.centerRight,
                                 child: Text(
-                                  " | ${_history[newIndex]._ket}",
+                                  "${_history[newIndex]._ket}",
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ))

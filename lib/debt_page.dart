@@ -53,7 +53,7 @@ class _DebtState extends State<Debt> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    if(plus != null && ket != null)
+                    if (plus != null && ket != null)
                       _debt.add(Debts(ket, plus, "+"));
 
                     plus = null;
@@ -100,7 +100,7 @@ class _DebtState extends State<Debt> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    if(plus != null && ket != null)
+                    if (plus != null && ket != null)
                       _debt.add(Debts(ket, plus, "-"));
 
                     plus = null;
@@ -118,13 +118,13 @@ class _DebtState extends State<Debt> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Anda yakin sudah selesai?"),
+            title: Text("Anda yakin sudah?"),
             actions: <Widget>[
               Row(
                 children: <Widget>[
                   MaterialButton(
                     child: Text(
-                      "Tidak",
+                      "Belum",
                       style: TextStyle(color: Colors.teal[700], fontSize: 17),
                     ),
                     padding: EdgeInsets.all(15),
@@ -205,47 +205,73 @@ class _DebtState extends State<Debt> {
                       ),
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  padding: const EdgeInsets.only(bottom: 8),
                   itemCount: _debt.length,
                   itemBuilder: (context, index) {
                     int newIndex = _debt.length - 1 - index;
                     return Column(
                       children: <Widget>[
                         MyExpansionTile(
-                          leading: Icon(
-                            _debt[newIndex]._jenis == "+"
-                                ? Icons.attach_money
-                                : Icons.money_off,
-                            color: _debt[newIndex]._jenis == "+"
-                                ? Colors.teal[700]
-                                : Colors.red[700],
+                          title: Container(
+                            alignment: Alignment.centerLeft,
+                            color: Colors.black12,
+                            padding: EdgeInsets.all(8),
+                            height: 50,
+                            width: double.infinity,
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      child: Icon(
+                                        _debt[newIndex]._jenis == "+"
+                                            ? Icons.attach_money
+                                            : Icons.money_off,
+                                        color: _debt[newIndex]._jenis == "+"
+                                            ? Colors.teal[700]
+                                            : Colors.red[700],
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 6,
+                                    child: Text(
+                                      "${_debt[newIndex]._nominal}",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                    ),
+                                  ),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text("|", style: TextStyle(fontSize: 20,color: Colors.grey),),
+                                      )),
+                                  Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          "${_debt[newIndex]._nama}",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black),
+                                        ),
+                                      ))
+                                ]),
                           ),
-                          title: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    "${_debt[newIndex]._nominal}",
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    "| ${_debt[newIndex]._nama}",
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                  ),
-                                )
-                              ]),
                           backgroundColor: Colors.white70,
                           children: <Widget>[
                             Row(
                               children: <Widget>[
-                                Flexible(
+                                Expanded(
                                     flex: 1,
+                                    child: Container(
+                                      width: double.infinity,
+                                    )),
+                                Expanded(
+                                    flex: 18,
                                     child: ButtonTheme(
                                       minWidth: double.infinity,
                                       height: 50,
@@ -255,14 +281,19 @@ class _DebtState extends State<Debt> {
                                         },
                                         child: Text(
                                           _debt[newIndex]._jenis == "+"
-                                              ? "Sudah membayar"
-                                              : "Sudah dibayar",
+                                              ? "Sudah dibayar"
+                                              : "Sudah membayar",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 17),
                                         ),
                                         color: Colors.grey[700],
                                       ),
+                                    )),
+                                Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      width: double.infinity,
                                     )),
                               ],
                             ),
