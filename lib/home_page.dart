@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-var plus=0;
+var plus = 0;
 
-var saldo=0;
+var saldo = 0;
 
-String ket="";
+String ket = "";
 
 class MainPage extends StatefulWidget {
   @override
@@ -52,10 +52,12 @@ class _MainPageState extends State<MainPage> {
             ),
             actions: <Widget>[
               MaterialButton(
-                child: Text("Simpan",
-                style: TextStyle(
-                  color: Colors.white,
-                ),),
+                child: Text(
+                  "Simpan",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                 color: Colors.teal[700],
                 onPressed: () {
@@ -103,10 +105,12 @@ class _MainPageState extends State<MainPage> {
             ),
             actions: <Widget>[
               MaterialButton(
-                child: Text("Simpan",
-                style: TextStyle(
-                  color: Colors.white,
-                ),),
+                child: Text(
+                  "Simpan",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                 color: Colors.teal[700],
                 onPressed: () {
@@ -128,8 +132,9 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          leading: Icon(Icons.account_balance_wallet_rounded ),
-          title: Text("DompetAja"), backgroundColor: Colors.teal[700]),
+          leading: Icon(Icons.account_balance_wallet_rounded),
+          title: Text("DompetAja"),
+          backgroundColor: Colors.teal[700]),
       body: Column(children: <Widget>[
         Container(
           alignment: Alignment.centerLeft,
@@ -153,11 +158,13 @@ class _MainPageState extends State<MainPage> {
                     onPressed: () {
                       inputIncome(context);
                     },
-                    child: Text("+",
-                    style: TextStyle(
+                    child: Text(
+                      "+",
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 30,
-                    ),),
+                      ),
+                    ),
                     color: Colors.teal[700],
                   ),
                 )),
@@ -170,11 +177,13 @@ class _MainPageState extends State<MainPage> {
                     onPressed: () {
                       inputOutcome(context);
                     },
-                    child: Text("-",
-                    style: TextStyle(
+                    child: Text(
+                      "-",
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 30,
-                    ),),
+                      ),
+                    ),
                     color: Colors.red[900],
                   ),
                 ))
@@ -183,12 +192,14 @@ class _MainPageState extends State<MainPage> {
         Container(
           height: 50,
           alignment: Alignment.center,
-          child: Text("Transaksi terakhir",
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontStyle: FontStyle.italic,
-              ),),
+          child: Text(
+            "Transaksi terakhir",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
           color: Colors.black,
         ),
         Flexible(
@@ -214,33 +225,28 @@ class _MainPageState extends State<MainPage> {
                                   ? Colors.teal[700]
                                   : Colors.red[700],
                             ),
-                            child: Icon( _history[newIndex]._sym == "+"
-                              ? Icons.add
-                              : Icons.remove,
+                            child: Icon(
+                              _history[newIndex]._sym == "+"
+                                  ? Icons.add
+                                  : Icons.remove,
                               color: Colors.white,
                             ),
                             padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
                           ),
                           Container(
                             child: Text(
-                              " ${_history[newIndex]._nom}",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black
-                              ),
+                              "   ${_history[newIndex]._nom}",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.black),
                             ),
                           ),
                           Container(
-                            child: Text(
-                              " | ${_history[newIndex]._ket}",
-                              style: TextStyle(
-                                fontSize: 20
-                              ),
-                            )
-                          )
+                              child: Text(
+                            " | ${_history[newIndex]._ket}",
+                            style: TextStyle(fontSize: 20),
+                          ))
                         ],
-                      )
-                  );
+                      ));
                 }))
       ]),
     );

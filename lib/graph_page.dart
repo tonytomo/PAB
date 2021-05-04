@@ -9,11 +9,93 @@ class _GraphState extends State<Graph> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          leading: Icon(Icons.insert_chart_outlined_rounded ),
-          title: Text("Graph"), backgroundColor: Colors.teal[700]),
-      body: Center(
-        child: Text("lululu"),
+          leading: Icon(Icons.insert_chart_outlined_rounded),
+          title: Text("Graph"),
+          backgroundColor: Colors.teal[700]),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                border:
+                    Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
+              ),
+              child: ExpansionTile(
+                title: Text(
+                  "Income bulan ini",
+                  style: TextStyle(fontSize: 20),
+                ),
+                children: <Widget>[
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    separatorBuilder: (context, index) => Divider(
+                      color: Colors.grey,
+                      height: 0,
+                    ),
+                    itemCount: 0,
+                    // itemCount: _history.length < 10 ? _history.length : 10,
+                    itemBuilder: (context, index) {
+                      // int newIndex = _history.length - 1 - index;
+                      return ListTile(
+                        title: Text("income"),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border:
+                    Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
+              ),
+              child: ExpansionTile(
+                title: Text(
+                  "Outcome bulan ini",
+                  style: TextStyle(fontSize: 20),
+                ),
+                children: <Widget>[
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    separatorBuilder: (context, index) => Divider(
+                      color: Colors.grey,
+                      height: 0,
+                    ),
+                    itemCount: 0,
+                    // itemCount: _history.length < 10 ? _history.length : 10,
+                    itemBuilder: (context, index) {
+                      // int newIndex = _history.length - 1 - index;
+                      return ListTile(
+                        title: Text("outcome"),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                border:
+                    Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
+              ),
+              padding: EdgeInsets.all(15),
+              child: Text(
+                "Total = ",
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            Container(
+              child: Text("will be prediction"),
+            ),
+          ],
+        ),
       ),
     );
   }

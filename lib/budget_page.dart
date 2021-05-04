@@ -58,21 +58,19 @@ class _BudgetState extends State<Budget> {
                 child: Text("Simpan"),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  if (period == "Daily") {
-                    _budgetDaily[index]._nomBudget = plus;
-                    _budgetDaily[index]._ketBudget = ket;
-                  }
-                  //  budgetDaily.add(Cash(plus, ket, "+"));
-                  else if (period == "Weekly") {
-                    _budgetWeekly[index]._nomBudget = plus;
-                    _budgetWeekly[index]._ketBudget = ket;
-                  } else if (period == "Monthly") {
-                    _budgetMonthly[index]._nomBudget = plus;
-                    _budgetMonthly[index]._ketBudget = ket;
-                  }
                   setState(() {
-                    plus = null;
-                    ket = null;
+                    if (period == "Daily") {
+                      _budgetDaily[index]._nomBudget = plus;
+                      _budgetDaily[index]._ketBudget = ket;
+                    }
+                    //  budgetDaily.add(Cash(plus, ket, "+"));
+                    else if (period == "Weekly") {
+                      _budgetWeekly[index]._nomBudget = plus;
+                      _budgetWeekly[index]._ketBudget = ket;
+                    } else if (period == "Monthly") {
+                      _budgetMonthly[index]._nomBudget = plus;
+                      _budgetMonthly[index]._ketBudget = ket;
+                    }
                   });
                 },
               )
@@ -91,20 +89,24 @@ class _BudgetState extends State<Budget> {
               Row(
                 children: <Widget>[
                   MaterialButton(
-                    child: Text("Tidak",
-                    style: TextStyle(
-                      color: Colors.teal[700],
-                    ),),
+                    child: Text(
+                      "Tidak",
+                      style: TextStyle(
+                        color: Colors.teal[700],
+                      ),
+                    ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   MaterialButton(
-                    child: Text("Iya",
-                    style: TextStyle(
-                      color: Colors.red[700],
-                    ),),
+                    child: Text(
+                      "Iya",
+                      style: TextStyle(
+                        color: Colors.red[700],
+                      ),
+                    ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
                       _budgetDaily.removeAt(index);
@@ -116,8 +118,7 @@ class _BudgetState extends State<Budget> {
               )
             ],
           );
-        }
-    );
+        });
   }
 
   _deleteWeekly(int index) {
@@ -130,20 +131,24 @@ class _BudgetState extends State<Budget> {
               Row(
                 children: <Widget>[
                   MaterialButton(
-                    child: Text("Tidak",
+                    child: Text(
+                      "Tidak",
                       style: TextStyle(
                         color: Colors.teal[700],
-                      ),),
+                      ),
+                    ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   MaterialButton(
-                    child: Text("Iya",
+                    child: Text(
+                      "Iya",
                       style: TextStyle(
                         color: Colors.red[700],
-                      ),),
+                      ),
+                    ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
                       _budgetWeekly.removeAt(index);
@@ -155,8 +160,7 @@ class _BudgetState extends State<Budget> {
               )
             ],
           );
-        }
-    );
+        });
   }
 
   _deleteMonthly(int index) {
@@ -169,20 +173,24 @@ class _BudgetState extends State<Budget> {
               Row(
                 children: <Widget>[
                   MaterialButton(
-                    child: Text("Tidak",
+                    child: Text(
+                      "Tidak",
                       style: TextStyle(
                         color: Colors.teal[700],
-                      ),),
+                      ),
+                    ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   MaterialButton(
-                    child: Text("Iya",
+                    child: Text(
+                      "Iya",
                       style: TextStyle(
                         color: Colors.red[700],
-                      ),),
+                      ),
+                    ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
                       _budgetMonthly.removeAt(index);
@@ -194,8 +202,7 @@ class _BudgetState extends State<Budget> {
               )
             ],
           );
-        }
-    );
+        });
   }
 
   inputIncomePeriodly(BuildContext context) {
@@ -345,7 +352,7 @@ class _BudgetState extends State<Budget> {
             backgroundColor: Colors.teal[700]),
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
-              Row(
+          Row(
             children: <Widget>[
               Flexible(
                   flex: 2,
@@ -389,7 +396,7 @@ class _BudgetState extends State<Budget> {
                   Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
             ),
             child: Column(children: <Widget>[
-              MyExpansionTile(
+              ExpansionTile(
                 title: Text(
                   "Daily",
                   style: TextStyle(
@@ -397,15 +404,17 @@ class _BudgetState extends State<Budget> {
                       color: Colors.black,
                       fontStyle: FontStyle.italic),
                 ),
+                backgroundColor: Colors.grey[200],
                 children: <Widget>[
                   ListView.separated(
                       separatorBuilder: (context, index) => Divider(
-                        color: Colors.grey,
-                      ),
+                            color: Colors.grey,
+                            height: 0,
+                          ),
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                       //   reverse: true,
                       itemCount: _budgetDaily.length,
                       itemBuilder: (context, index) {
@@ -414,15 +423,22 @@ class _BudgetState extends State<Budget> {
                         return Column(
                           children: <Widget>[
                             MyExpansionTile(
-                              title: Text(
-                                "${_budgetDaily[newIndex]._symBudget} ${_budgetDaily[newIndex]._nomBudget} ${_budgetDaily[newIndex]._ketBudget}",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color:
-                                        _budgetDaily[newIndex]._symBudget == "+"
-                                            ? Colors.teal[700]
-                                            : Colors.red[700]),
+                              leading: Icon(
+                                _budgetDaily[newIndex]._symBudget == "+"
+                                    ? Icons.add_circle
+                                    : Icons.remove_circle,
+                                color: _budgetDaily[newIndex]._symBudget == "+"
+                                    ? Colors.teal[700]
+                                    : Colors.red[700],
                               ),
+                              title: Text(
+                                "${_budgetDaily[newIndex]._nomBudget} | ${_budgetDaily[newIndex]._ketBudget}",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              backgroundColor: Colors.white,
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
@@ -447,8 +463,7 @@ class _BudgetState extends State<Budget> {
                                           height: 50,
                                           child: RaisedButton(
                                             onPressed: () {
-                                              _edit(
-                                                  period, context, newIndex);
+                                              _edit(period, context, newIndex);
                                             },
                                             child: Icon(
                                               Icons.edit,
@@ -475,7 +490,7 @@ class _BudgetState extends State<Budget> {
                   Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
             ),
             child: Column(children: <Widget>[
-              MyExpansionTile(
+              ExpansionTile(
                 title: Text(
                   "Weekly",
                   style: TextStyle(
@@ -483,15 +498,17 @@ class _BudgetState extends State<Budget> {
                       color: Colors.black,
                       fontStyle: FontStyle.italic),
                 ),
+                backgroundColor: Colors.grey[200],
                 children: <Widget>[
                   ListView.separated(
                       separatorBuilder: (context, index) => Divider(
-                        color: Colors.grey,
-                      ),
+                            color: Colors.grey,
+                            height: 0,
+                          ),
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                       //   reverse: true,
                       itemCount: _budgetWeekly.length,
                       itemBuilder: (context, index) {
@@ -500,15 +517,21 @@ class _BudgetState extends State<Budget> {
                         return Column(
                           children: <Widget>[
                             MyExpansionTile(
-                              title: Text(
-                                "${_budgetWeekly[newIndex]._symBudget} ${_budgetWeekly[newIndex]._nomBudget} ${_budgetWeekly[newIndex]._ketBudget}",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color:
-                                        _budgetWeekly[newIndex]._symBudget == "+"
-                                            ? Colors.teal[700]
-                                            : Colors.red[700]),
+                              leading: Icon(
+                                _budgetWeekly[newIndex]._symBudget == "+"
+                                    ? Icons.add_circle
+                                    : Icons.remove_circle,
+                                color: _budgetWeekly[newIndex]._symBudget == "+"
+                                    ? Colors.teal[700]
+                                    : Colors.red[700],
                               ),
+                              title: Text(
+                                  "${_budgetWeekly[newIndex]._nomBudget} | ${_budgetWeekly[newIndex]._ketBudget}",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                  )),
+                              backgroundColor: Colors.white,
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
@@ -533,8 +556,7 @@ class _BudgetState extends State<Budget> {
                                           height: 50,
                                           child: RaisedButton(
                                             onPressed: () {
-                                              _edit(
-                                                  period, context, newIndex);
+                                              _edit(period, context, newIndex);
                                             },
                                             child: Icon(
                                               Icons.edit,
@@ -558,10 +580,10 @@ class _BudgetState extends State<Budget> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               border:
-              Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                  Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
             ),
             child: Column(children: <Widget>[
-              MyExpansionTile(
+              ExpansionTile(
                 title: Text(
                   "Monthly",
                   style: TextStyle(
@@ -569,15 +591,17 @@ class _BudgetState extends State<Budget> {
                       color: Colors.black,
                       fontStyle: FontStyle.italic),
                 ),
+                backgroundColor: Colors.grey[200],
                 children: <Widget>[
                   ListView.separated(
                       separatorBuilder: (context, index) => Divider(
-                        color: Colors.grey,
-                      ),
+                            color: Colors.grey,
+                            height: 0,
+                          ),
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                       //   reverse: true,
                       itemCount: _budgetMonthly.length,
                       itemBuilder: (context, index) {
@@ -586,15 +610,23 @@ class _BudgetState extends State<Budget> {
                         return Column(
                           children: <Widget>[
                             MyExpansionTile(
-                              title: Text(
-                                "${_budgetMonthly[newIndex]._symBudget} ${_budgetMonthly[newIndex]._nomBudget} ${_budgetMonthly[newIndex]._ketBudget}",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color:
+                              leading: Icon(
+                                _budgetMonthly[newIndex]._symBudget == "+"
+                                    ? Icons.add_circle
+                                    : Icons.remove_circle,
+                                color:
                                     _budgetMonthly[newIndex]._symBudget == "+"
                                         ? Colors.teal[700]
-                                        : Colors.red[700]),
+                                        : Colors.red[700],
                               ),
+                              title: Text(
+                                "${_budgetMonthly[newIndex]._nomBudget} | ${_budgetMonthly[newIndex]._ketBudget}",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              backgroundColor: Colors.white,
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
@@ -619,8 +651,7 @@ class _BudgetState extends State<Budget> {
                                           height: 50,
                                           child: RaisedButton(
                                             onPressed: () {
-                                              _edit(
-                                                  period, context, newIndex);
+                                              _edit(period, context, newIndex);
                                             },
                                             child: Icon(
                                               Icons.edit,
