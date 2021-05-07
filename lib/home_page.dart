@@ -14,10 +14,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final historyBox = Hive.box('histories');
+  final historyBox = Hive.box('history');
 
   void addHistory(History history) {
     historyBox.add(history);
+  }
+
+  void deleteHistory() {
+    historyBox.deleteAll(historyBox.keys);
   }
 
   inputOutcome(BuildContext context) {
@@ -162,12 +166,9 @@ class _MainPageState extends State<MainPage> {
                     onPressed: () {
                       inputIncome(context);
                     },
-                    child: Text(
-                      "+",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                      ),
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
                     ),
                     color: Colors.teal[700],
                   ),
@@ -181,12 +182,9 @@ class _MainPageState extends State<MainPage> {
                     onPressed: () {
                       inputOutcome(context);
                     },
-                    child: Text(
-                      "-",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                      ),
+                    child: Icon(
+                      Icons.remove,
+                      color: Colors.white,
                     ),
                     color: Colors.red[900],
                   ),
@@ -196,13 +194,32 @@ class _MainPageState extends State<MainPage> {
         Container(
           height: 50,
           alignment: Alignment.center,
-          child: Text(
-            "Transaksi terakhir",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-              fontStyle: FontStyle.italic,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: Text(
+                  "Transaksi terakhir",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                    alignment: Alignment.centerRight,
+                    icon: Icon(Icons.auto_delete),color: Colors.white,
+                    onPressed: () {
+                      deleteHistory();
+                    }
+                ),
+              ),
+            ],
           ),
           color: Colors.black,
         ),
@@ -216,7 +233,7 @@ class _MainPageState extends State<MainPage> {
 
   Widget _buildListView() {
     return WatchBoxBuilder(
-        box: Hive.box('histories'),
+        box: Hive.box('history'),
         builder: (context, historyBox) {
           return ListView.builder(
               padding: const EdgeInsets.all(8),
@@ -262,7 +279,7 @@ class _MainPageState extends State<MainPage> {
                               child: Text(
                                 "|",
                                 style:
-                                    TextStyle(fontSize: 20, color: Colors.grey),
+                                TextStyle(fontSize: 20, color: Colors.grey),
                               ),
                             )),
                         Expanded(
@@ -270,7 +287,7 @@ class _MainPageState extends State<MainPage> {
                             child: Container(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                history.ket.capitalize(),
+                                "${history.ket.capitalize()}",
                                 style: TextStyle(fontSize: 20),
                               ),
                             ))
