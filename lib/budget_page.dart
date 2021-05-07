@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pab_dompet/home_page.dart';
 
-import 'ExpansionTile_alt.dart';
+import 'customExtensions/ExpansionTile_alt.dart';
 
 class Budget extends StatefulWidget {
   @override

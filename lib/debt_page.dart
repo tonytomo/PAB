@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'ExpansionTile_alt.dart';
+import 'customExtensions/ExpansionTile_alt.dart';
 import 'home_page.dart';
 
 class Debt extends StatefulWidget {

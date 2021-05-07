@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pab_dompet/classes/history.dart';
+import 'customExtensions/string_operation.dart';
 
 var plus = 0;
-
 var saldo = 0;
-
 String ket = "";
 
 class MainPage extends StatefulWidget {
@@ -11,16 +13,12 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class History {
-  History(this._nom, this._ket, this._sym);
-
-  int _nom;
-  String _sym;
-  String _ket;
-}
-
 class _MainPageState extends State<MainPage> {
-  List<History> _history = [];
+  final historyBox = Hive.box('histories');
+
+  void addHistory(History history) {
+    historyBox.add(history);
+  }
 
   inputOutcome(BuildContext context) {
     return showDialog(
@@ -61,11 +59,12 @@ class _MainPageState extends State<MainPage> {
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                 color: Colors.teal[700],
                 onPressed: () {
+                  final newHistory = History("-", plus, ket);
+                  addHistory(newHistory);
                   Navigator.of(context).pop();
                   setState(() {
-                    if(plus != null && ket != null) {
+                    if (plus != null && ket != null) {
                       saldo = saldo - plus;
-                      _history.add(History(plus, ket, "-"));
                     }
                     plus = null;
                     ket = null;
@@ -116,11 +115,12 @@ class _MainPageState extends State<MainPage> {
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                 color: Colors.teal[700],
                 onPressed: () {
+                  final newHistory = History("+", plus, ket);
+                  addHistory(newHistory);
                   Navigator.of(context).pop();
                   setState(() {
-                    if(plus != null && ket != null) {
+                    if (plus != null && ket != null) {
                       saldo = saldo + plus;
-                      _history.add(History(plus, ket, "+"));
                     }
                     plus = null;
                     ket = null;
@@ -207,67 +207,76 @@ class _MainPageState extends State<MainPage> {
           color: Colors.black,
         ),
         Flexible(
-            flex: 1,
-            child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                //   reverse: true,
-                itemCount: _history.length < 10 ? _history.length : 10,
-                itemBuilder: (context, index) {
-                  int newIndex = _history.length - 1 - index;
-                  return Container(
-                      alignment: Alignment.centerLeft,
-                      color: Colors.black12,
-                      padding: EdgeInsets.all(8),
-                      height: 50,
-                      margin: EdgeInsets.all(2),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: _history[newIndex]._sym == "+"
-                                    ? Colors.teal[700]
-                                    : Colors.red[700],
-                              ),
-                              child: Icon(
-                                _history[newIndex]._sym == "+"
-                                    ? Icons.add
-                                    : Icons.remove,
-                                color: Colors.white,
-                              ),
-                              padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 6,
-                            child: Text(
-                              "   ${_history[newIndex]._nom}",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
-                            ),
-                          ),
-                          Expanded(
-                              flex: 1,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Text("|", style: TextStyle(fontSize: 20,color: Colors.grey),),
-                              )),
-                          Expanded(
-                              flex: 3,
-                              child: Container(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  "${_history[newIndex]._ket}",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ))
-                        ],
-                      ));
-                }))
+          flex: 1,
+          child: _buildListView(),
+        )
       ]),
     );
+  }
+
+  Widget _buildListView() {
+    return WatchBoxBuilder(
+        box: Hive.box('histories'),
+        builder: (context, historyBox) {
+          return ListView.builder(
+              padding: const EdgeInsets.all(8),
+              itemCount: historyBox.length < 10 ? historyBox.length : 10,
+              itemBuilder: (context, index) {
+                final history = historyBox.getAt(index) as History;
+                return Container(
+                    alignment: Alignment.centerLeft,
+                    color: Colors.black12,
+                    padding: EdgeInsets.all(8),
+                    height: 50,
+                    margin: EdgeInsets.all(2),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: history.sym == "+"
+                                  ? Colors.teal[700]
+                                  : Colors.red[700],
+                            ),
+                            child: Icon(
+                              history.sym == "+" ? Icons.add : Icons.remove,
+                              color: Colors.white,
+                            ),
+                            padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 6,
+                          child: Text(
+                            "   ${history.nominal}",
+                            style: TextStyle(fontSize: 20, color: Colors.black),
+                          ),
+                        ),
+                        Expanded(
+                            flex: 1,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "|",
+                                style:
+                                    TextStyle(fontSize: 20, color: Colors.grey),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 3,
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                history.ket.capitalize(),
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ))
+                      ],
+                    ));
+              });
+        });
   }
 }
