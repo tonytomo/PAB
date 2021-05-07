@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:pab_dompet/classes/history.dart';
+import 'classes/saldo.dart';
 import 'package:pab_dompet/home_page.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:pab_dompet/base_page.dart';
+
+List<Box> boxList = [];
+Future<List<Box>> _openBox() async {
+  var boxSession = await Hive.openBox('history');
+  var boxComment = await Hive.openBox("saldo");
+  boxList.add(boxSession);
+  boxList.add(boxComment);
+  return boxList;
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +21,7 @@ void main() async {
   await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
   Hive.registerAdapter(HistoryAdapter());
+  Hive.registerAdapter(SaldoAdapter());
   runApp(MaterialApp(home: MyApp()));
 }
 
@@ -26,7 +37,7 @@ class _MyAppState extends State<MyApp> {
       title: "Coba Aja",
       theme: ThemeData(fontFamily: 'Oswald'),
       home: FutureBuilder(
-        future: Hive.openBox('history'),
+        future: _openBox(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError)

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pab_dompet/classes/history.dart';
+import 'package:pab_dompet/classes/saldo.dart';
 import 'package:hive/hive.dart';
 
 class inputPendapatan extends StatefulWidget {
@@ -13,6 +14,7 @@ class inputPendapatan extends StatefulWidget {
 }
 
 class _inputPendapatanState extends State<inputPendapatan> {
+
   @override
   void initState() {
     super.initState();
@@ -22,6 +24,11 @@ class _inputPendapatanState extends State<inputPendapatan> {
     status="Pengeluaran";
   }
 
+  void currentSaldo(Saldo saldo) {
+    saldoBox.putAt(0, saldo);
+  }
+
+  final saldoBox = Hive.box('saldo');
   var _formKey = GlobalKey<FormState>();
   final historyBox = Hive.box('history');
   String status;
@@ -37,10 +44,16 @@ class _inputPendapatanState extends State<inputPendapatan> {
     }
     _formKey.currentState.save();
     final newHistory = History(widget.sym, widget.plus, widget.ket);
+    var saldo = saldoBox.get(0) as Saldo;
+    var newSaldo = Saldo(saldo.nom);
+    if(status == "Pemasukan")
+      newSaldo = Saldo(saldo.nom + widget.plus);
+    else if(status == "Pengeluaran")
+      newSaldo = Saldo(saldo.nom - widget.plus);
     addHistory(newHistory);
     Navigator.pop(context);
 
-    //sesuatu
+    currentSaldo(newSaldo);
   }
 
   @override
@@ -66,7 +79,7 @@ class _inputPendapatanState extends State<inputPendapatan> {
                   },
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Pengeluaran tidak boleh kosong!';
+                      return '$status tidak boleh kosong!';
                     }
                     return null;
                   },
