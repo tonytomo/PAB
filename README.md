@@ -1,16 +1,24 @@
-# pab_dompet
+# DompetAja
 
-A new Flutter application.
+_Aplikasi pencatatan uang dan transaksi personal_
 
-## Getting Started
+## Description
+Aplikasi DompetAja merupakan aplikasi pencatatan keuangan pribadi yang
+bisa digunakan setiap orang. Aplikasi ini memiliki antarmuka yang sederhana
+dan menggunakan penyimpanan data secara lokal sehingga tidak perlu terkoneksi 
+dengan internet. Aplikasi ini mengedepankan kemudahan, kenyamanan, dan kecepatan.
 
-This project is a starting point for a Flutter application.
+## Pages
+1. Main Page - menampilkan saldo, menambah transaksi, riwayat transaksi
+1. Budget Page - menambah budget yang dikelompokkan dari _Daily_, _Weekly_, dan _Monthly_
+1. Debt Page - menambah catatan hutang/piutang yang dimiliki, daftar hutang/piutang
+1. Graph Page - menampilkan transaksi bulanan, prediksi pendapatan pertahun
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Fitur:
+1. Memberikan informasi total saldo yang dimiliki
+1. Menambah catatan transaksi jika ada income dan outcome
+1. Menambah budget
+1. Budget digunakan untuk transaksi yang rutin, seperti gaji
+1. Menambah catatan hutang/piutang
+1. Memberikan informasi transaksi dalam periode bulanan
+1. Memberikan prediksi pendapatan per tahun dari budget 

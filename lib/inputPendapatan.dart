@@ -9,19 +9,17 @@ class inputPendapatan extends StatefulWidget {
   int plus;
   String ket;
   String sym;
-  inputPendapatan(this.plus,this.ket,this.sym);
 
+  inputPendapatan(this.plus, this.ket, this.sym);
 }
 
 class _inputPendapatanState extends State<inputPendapatan> {
-
   @override
   void initState() {
     super.initState();
-  if(widget.sym=="+")
-    status="Pemasukan";
-  else if(widget.sym=="-")
-    status="Pengeluaran";
+    if (widget.sym == "+")
+      status = "Pemasukan";
+    else if (widget.sym == "-") status = "Pengeluaran";
   }
 
   void currentSaldo(Saldo saldo) {
@@ -46,10 +44,9 @@ class _inputPendapatanState extends State<inputPendapatan> {
     final newHistory = History(widget.sym, widget.plus, widget.ket);
     var saldo = saldoBox.get(0) as Saldo;
     var newSaldo = Saldo(saldo.nom);
-    if(status == "Pemasukan")
+    if (status == "Pemasukan")
       newSaldo = Saldo(saldo.nom + widget.plus);
-    else if(status == "Pengeluaran")
-      newSaldo = Saldo(saldo.nom - widget.plus);
+    else if (status == "Pengeluaran") newSaldo = Saldo(saldo.nom - widget.plus);
     addHistory(newHistory);
     Navigator.pop(context);
 
@@ -60,11 +57,20 @@ class _inputPendapatanState extends State<inputPendapatan> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Masukan Jumlah $status"),
+        leading: IconButton(
+          alignment: Alignment.centerLeft,
+          icon: Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text("Input $status"),
+        backgroundColor: Colors.teal[700],
       ),
       body: Container(
           alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 50),
+          margin: EdgeInsets.all(8),
           child: Form(
             key: _formKey,
             child: Column(
@@ -99,21 +105,16 @@ class _inputPendapatanState extends State<inputPendapatan> {
                   },
                 ),
                 RaisedButton(
-                    padding: EdgeInsets.symmetric(
-                    ),
+                    padding: EdgeInsets.symmetric(),
+                    color: Colors.teal[700],
                     child: Text(
                       "Simpan",
-                      style: TextStyle(
-                        fontSize: 24.0,
-                      ),
+                      style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                     onPressed: () {
                       _submit();
-                      setState(() {
-
-                      });
-                    }
-                )
+                      setState(() {});
+                    })
               ],
             ),
           )),

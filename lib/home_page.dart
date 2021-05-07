@@ -17,7 +17,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   @override
   void initState() {
     super.initState();
@@ -37,119 +36,37 @@ class _MainPageState extends State<MainPage> {
   }
 
   void deleteHistory() {
-    historyBox.deleteAll(historyBox.keys);
-  }
-
-  inputOutcome(BuildContext context) {
-    return showDialog(
+    showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Masukan Jumlah Pengeluaran"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'Pengeluaran',
-                  ),
-                  onChanged: (String value) {
-                    plus = int.parse(value);
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Keterangan',
-                  ),
-                  onChanged: (String value2) {
-                    ket = value2;
-                  },
-                ),
-              ],
-            ),
+            title: Text("Anda yakin ingin menghapus?"),
             actions: <Widget>[
-              MaterialButton(
-                child: Text(
-                  "Simpan",
-                  style: TextStyle(
-                    color: Colors.white,
+              Row(
+                children: <Widget>[
+                  MaterialButton(
+                    child: Text(
+                      "Tidak",
+                      style: TextStyle(color: Colors.teal[700], fontSize: 17),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                ),
-                padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                color: Colors.teal[700],
-                onPressed: () {
-                  var saldo = saldoBox.get(0) as Saldo;
-                  final newSaldo = Saldo(saldo.nom - plus);
-                  final newHistory = History("-", plus, ket);
-                  addHistory(newHistory);
-                  Navigator.of(context).pop();
-                  setState(() {
-                    if (plus != null && ket != null) {
-                      currentSaldo(newSaldo);
-                    }
-                    plus = null;
-                    ket = null;
-                  });
-                },
-              )
-            ],
-          );
-        });
-  }
-
-  inputIncome(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Masukan Jumlah Pemasukan"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'Pemasukan',
+                  MaterialButton(
+                    child: Text(
+                      "Iya",
+                      style: TextStyle(color: Colors.red[700], fontSize: 17),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    onPressed: () {
+                      historyBox.deleteAll(historyBox.keys);
+                      setState(() {});
+                      Navigator.of(context).pop();
+                    },
                   ),
-                  onChanged: (String value) {
-                    plus = int.parse(value);
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Keterangan',
-                  ),
-                  onChanged: (String value2) {
-                    ket = value2;
-                  },
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              MaterialButton(
-                child: Text(
-                  "Simpan",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                color: Colors.teal[700],
-                onPressed: () {
-                  final newHistory = History("+", plus, ket);
-                  var saldo = saldoBox.get(0) as Saldo;
-                  final newSaldo = Saldo(saldo.nom + plus);
-                  addHistory(newHistory);
-                  Navigator.of(context).pop();
-                  setState(() {
-                    if (plus != null && ket != null) {
-                      currentSaldo(newSaldo);
-                    }
-                    plus = null;
-                    ket = null;
-                  });
-                },
+                ],
               )
             ],
           );
@@ -183,7 +100,9 @@ class _MainPageState extends State<MainPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => inputPendapatan(plus, ket,"+")),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                inputPendapatan(plus, ket, "+")),
                       );
                       //inputIncome(context);
                     },
@@ -203,7 +122,9 @@ class _MainPageState extends State<MainPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => inputPendapatan(plus, ket,"-")),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                inputPendapatan(plus, ket, "-")),
                       );
                     },
                     child: Icon(
@@ -221,6 +142,12 @@ class _MainPageState extends State<MainPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: Container(
+                  width: double.infinity,
+                ),
+              ),
               Expanded(
                 flex: 4,
                 child: Text(
@@ -260,7 +187,10 @@ class _MainPageState extends State<MainPage> {
         box: Hive.box('saldo'),
         builder: (context, saldoBox) {
           var balance = saldoBox.getAt(0) as Saldo;
-          return Text("Rp ${balance.nom} ,-",style: TextStyle(fontSize: 30),);
+          return Text(
+            "Rp ${balance.nom} ,-",
+            style: TextStyle(fontSize: 30),
+          );
         });
   }
 
@@ -272,7 +202,7 @@ class _MainPageState extends State<MainPage> {
               padding: const EdgeInsets.all(8),
               itemCount: historyBox.length < 10 ? historyBox.length : 10,
               itemBuilder: (context, index) {
-                index=historyBox.length-index-1;
+                index = historyBox.length - index - 1;
                 final history = historyBox.getAt(index) as History;
                 return Container(
                     alignment: Alignment.centerLeft,
