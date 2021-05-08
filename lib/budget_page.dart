@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:pab_dompet/home_page.dart';
+import 'package:pab_dompet/inputBudget.dart';
 
 import 'classes/history.dart';
 import 'classes/saldo.dart';
@@ -36,8 +37,6 @@ class _BudgetState extends State<Budget> {
   List<Cash> _budgetDaily = [];
   List<Cash> _budgetWeekly = [];
   List<Cash> _budgetMonthly = [];
-  String _valueChoose;
-  List _periode = ["Daily", "Weekly", "Monthly"];
 
   _edit(String period, BuildContext context, int index) {
     return showDialog(
@@ -227,143 +226,6 @@ class _BudgetState extends State<Budget> {
         });
   }
 
-  inputIncomePeriodly(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Masukan Jumlah Pemasukan"),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Pemasukan',
-                    ),
-                    onChanged: (String value) {
-                      plus = int.parse(value);
-                    },
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Keterangan',
-                    ),
-                    onChanged: (String value2) {
-                      ket = value2;
-                    },
-                  ),
-                  DropdownButtonFormField(
-                    hint: Text("Periode"),
-                    value: _valueChoose,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _valueChoose = newValue;
-                      });
-                    },
-                    items: _periode.map((valueItem) {
-                      return DropdownMenuItem(
-                        value: valueItem,
-                        child: Text(valueItem),
-                      );
-                    }).toList(),
-                  )
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              MaterialButton(
-                child: Text("Simpan"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    if (plus != null && ket != null && _valueChoose != null) {
-                      if (_valueChoose == "Daily")
-                        _budgetDaily.add(Cash(plus, ket, "+"));
-                      else if (_valueChoose == "Weekly")
-                        _budgetWeekly.add(Cash(plus, ket, "+"));
-                      else if (_valueChoose == "Monthly")
-                        _budgetMonthly.add(Cash(plus, ket, "+"));
-                    }
-                    plus = null;
-                    ket = null;
-                  });
-                },
-              )
-            ],
-          );
-        });
-  }
-
-  inputOutcomePeriodly(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Masukan Budget Pengeluaran"),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Pengeluaran',
-                    ),
-                    onChanged: (String value) {
-                      plus = int.parse(value);
-                    },
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Keterangan',
-                    ),
-                    onChanged: (String value2) {
-                      ket = value2;
-                    },
-                  ),
-                  DropdownButtonFormField(
-                    hint: Text("Periode"),
-                    value: _valueChoose,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _valueChoose = newValue;
-                      });
-                    },
-                    items: _periode.map((valueItem) {
-                      return DropdownMenuItem(
-                        value: valueItem,
-                        child: Text(valueItem),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              MaterialButton(
-                child: Text("Simpan"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    if (plus != null && ket != null && _valueChoose != null) {
-                      if (_valueChoose == "Daily")
-                        _budgetDaily.add(Cash(plus, ket, "-"));
-                      else if (_valueChoose == "Weekly")
-                        _budgetWeekly.add(Cash(plus, ket, "-"));
-                      else if (_valueChoose == "Monthly")
-                        _budgetMonthly.add(Cash(plus, ket, "-"));
-                    }
-                    plus = null;
-                    ket = null;
-                  });
-                },
-              )
-            ],
-          );
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -384,8 +246,11 @@ class _BudgetState extends State<Budget> {
                     height: 50,
                     child: RaisedButton(
                       onPressed: () {
-                        inputIncomePeriodly(context);
-                        print(_budgetDaily[0]._nomBudget);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => inputBudget("+")),
+                        );
                       },
                       child: Text(
                         "+",
@@ -401,7 +266,11 @@ class _BudgetState extends State<Budget> {
                     height: 50,
                     child: RaisedButton(
                       onPressed: () {
-                        inputOutcomePeriodly(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => inputBudget("-")),
+                        );
                       },
                       child: Text(
                         "-",

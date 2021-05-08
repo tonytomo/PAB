@@ -12,6 +12,8 @@ class BudgetList {
   String ket;
   @HiveField(3)
   DateTime crDate;
+  @HiveField(4)
+  String period;
 
-  BudgetList(this.sym, this.nom, this.ket, this.crDate);
+  BudgetList(this.sym, this.nom, this.ket, this.crDate,this.period);
 }

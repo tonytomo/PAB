@@ -21,13 +21,14 @@ class BudgetListAdapter extends TypeAdapter<BudgetList> {
       fields[1] as int,
       fields[2] as String,
       fields[3] as DateTime,
+      fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, BudgetList obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.sym)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class BudgetListAdapter extends TypeAdapter<BudgetList> {
       ..writeByte(2)
       ..write(obj.ket)
       ..writeByte(3)
-      ..write(obj.crDate);
+      ..write(obj.crDate)
+      ..writeByte(4)
+      ..write(obj.period);
   }
 
   @override
