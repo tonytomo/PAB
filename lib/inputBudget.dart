@@ -5,8 +5,8 @@ import 'package:hive/hive.dart';
 import 'package:cron/cron.dart';
 
 import 'classes/budget.dart';
-import 'classes/budget.dart';
-import 'classes/budget.dart';
+import 'classes/history.dart';
+import 'classes/saldo.dart';
 
 class inputBudget extends StatefulWidget {
   @override
@@ -31,14 +31,21 @@ class _inputBudgetState extends State<inputBudget> {
   DateTime crDate;
   String period;
 
-  //final saldoBox = Hive.box('saldo');
+  final saldoBox = Hive.box('saldo');
+  final historyBox = Hive.box('history');
+
   var _formKey = GlobalKey<FormState>();
+
   final budgetDailyBox = Hive.box('budgetdaily');
   final budgetWeeklyBox = Hive.box('budgetweekly');
   final budgetMonthlyBox = Hive.box('budgetmonthly');
   String status;
   String _valueChoose;
   List _periode = ["Daily", "Weekly", "Monthly"];
+
+  void addHistory(History history) {
+    historyBox.add(history);
+  }
 
   void addBudgetDaily(BudgetList budget) {
     budgetDailyBox.add(budget);
@@ -52,39 +59,48 @@ class _inputBudgetState extends State<inputBudget> {
     budgetMonthlyBox.add(budget);
   }
 
-  void addTransactionDaily() {
-    // Pengurangan saldo dan penambahan transaksi di homepage
-  }
-
-  void addTransactionWeekly() {
-    // Pengurangan saldo dan penambahan transaksi di homepage
-  }
-
-  void addTransactionMonthly() {
-    // Pengurangan saldo dan penambahan transaksi di homepage
-  }
-
-  void scheduleDaily() {
+  void scheduleDaily(BudgetList budget) {
     final cron = Cron();
     cron.schedule(new Schedule.parse('0 0 * * *'), () async {
       // Daily
-      addTransactionDaily();
+      // Penambahan saldo dan penambahan transaksi di homepage per hari
+      var balance = saldoBox.getAt(0) as Saldo;
+      if (budget.sym == "+")
+        balance.nom += budget.nom;
+      else if (budget.sym == "-") balance.nom += budget.nom;
+
+      final newHistory = History(budget.sym, budget.nom, budget.ket);
+      addHistory(newHistory);
     });
   }
 
-  void scheduleWeekly() {
+  void scheduleWeekly(BudgetList budget) {
     final cron = Cron();
     cron.schedule(new Schedule.parse('0 0 0 0 *'), () async {
       // Weekly
-      addTransactionWeekly();
+      // Penambahan saldo dan penambahan transaksi di homepage per minggu
+      var balance = saldoBox.getAt(0) as Saldo;
+      if (budget.sym == "+")
+        balance.nom += budget.nom;
+      else if (budget.sym == "-") balance.nom += budget.nom;
+
+      final newHistory = History(budget.sym, budget.nom, budget.ket);
+      addHistory(newHistory);
     });
   }
 
-  void scheduleMonthly() {
+  void scheduleMonthly(BudgetList budget) {
     final cron = Cron();
     cron.schedule(new Schedule.parse('0 0 0 * 0'), () async {
       // Monthly
-      addTransactionMonthly();
+      // Penambahan saldo dan penambahan transaksi di homepage per bulan
+      var balance = saldoBox.getAt(0) as Saldo;
+      if (budget.sym == "+")
+        balance.nom += budget.nom;
+      else if (budget.sym == "-") balance.nom += budget.nom;
+
+      final newHistory = History(budget.sym, budget.nom, budget.ket);
+      addHistory(newHistory);
     });
   }
 
@@ -97,13 +113,13 @@ class _inputBudgetState extends State<inputBudget> {
     final newBudget = BudgetList(widget.sym, nom, ket, crDate, _valueChoose);
     if (newBudget.period == "Daily") {
       addBudgetDaily(newBudget);
-      scheduleDaily();
+      scheduleDaily(newBudget);
     } else if (newBudget.period == "Weekly") {
       addBudgetWeekly(newBudget);
-      scheduleWeekly();
+      scheduleWeekly(newBudget);
     } else if (newBudget.period == "Monthly") {
       addBudgetMonthly(newBudget);
-      scheduleMonthly();
+      scheduleMonthly(newBudget);
     }
 
     nom = null;

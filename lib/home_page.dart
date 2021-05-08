@@ -31,10 +31,6 @@ class _MainPageState extends State<MainPage> {
     saldoBox.putAt(0, saldo);
   }
 
-  void addHistory(History history) {
-    historyBox.add(history);
-  }
-
   void deleteHistory() {
     showDialog(
         context: context,
