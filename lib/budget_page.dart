@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pab_dompet/home_page.dart';
 import 'package:pab_dompet/inputBudget.dart';
 
+import 'classes/budget.dart';
+import 'classes/budget.dart';
 import 'classes/history.dart';
 import 'classes/saldo.dart';
 import 'classes/budget.dart';
@@ -23,15 +26,21 @@ class Cash {
 }
 
 class _BudgetState extends State<Budget> {
-  final budgetBox = Hive.box('budget');
+  final budgetDailyBox = Hive.box('budgetdaily');
+  final budgetWeeklyBox = Hive.box('budgetweekly');
+  final budgetMonthlyBox = Hive.box('budgetmonthly');
   final historyBox = Hive.box('history');
 
-  void addBudget(Budget budget) {
-    budgetBox.add(budget);
+  void deleteDailyBudget(int index) {
+    budgetDailyBox.deleteAt(index);
   }
 
-  void deleteBudget(int index) {
-    budgetBox.deleteAt(index);
+  void deleteWeeklyBudget(int index) {
+    budgetWeeklyBox.deleteAt(index);
+  }
+
+  void deleteMonthlyBudget(int index) {
+    budgetMonthlyBox.deleteAt(index);
   }
 
   List<Cash> _budgetDaily = [];
@@ -130,7 +139,7 @@ class _BudgetState extends State<Budget> {
                     ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
-                      _budgetDaily.removeAt(index);
+                      budgetDailyBox.deleteAt(index);
                       setState(() {});
                       Navigator.of(context).pop();
                     },
@@ -172,7 +181,7 @@ class _BudgetState extends State<Budget> {
                     ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
-                      _budgetWeekly.removeAt(index);
+                      budgetWeeklyBox.deleteAt(index);
                       setState(() {});
                       Navigator.of(context).pop();
                     },
@@ -214,7 +223,7 @@ class _BudgetState extends State<Budget> {
                     ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
-                      _budgetMonthly.removeAt(index);
+                      budgetMonthlyBox.deleteAt(index);
                       setState(() {});
                       Navigator.of(context).pop();
                     },
@@ -226,6 +235,368 @@ class _BudgetState extends State<Budget> {
         });
   }
 
+  Widget _buildListViewDaily() {
+    return WatchBoxBuilder(
+        box: Hive.box('budgetdaily'),
+        builder: (context, budgetDailyBox) {
+          return ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                    color: Colors.grey,
+                    height: 0,
+                  ),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.only(bottom: 8),
+              itemCount: budgetDailyBox.length,
+              itemBuilder: (context, index) {
+                index = budgetDailyBox.length - 1 - index;
+                var budget = budgetDailyBox.getAt(index) as BudgetList;
+                return Column(
+                  children: <Widget>[
+                    MyExpansionTile(
+                      title: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(8),
+                        height: 50,
+                        width: double.infinity,
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  child: Icon(
+                                    budget.sym == "+"
+                                        ? Icons.add_circle
+                                        : Icons.remove_circle,
+                                    color: budget.sym == "+"
+                                        ? Colors.teal[700]
+                                        : Colors.red[700],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 6,
+                                child: Text(
+                                  "   ${budget.nom}",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "|",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.grey),
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "${budget.ket}",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                    ),
+                                  ))
+                            ]),
+                      ),
+                      backgroundColor: Colors.white,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      if (budget.period == "Daily")
+                                        _deleteDaily(index);
+                                      else if (budget.period == "Weekly")
+                                        _deleteWeekly(index);
+                                      else if (budget.period == "Monthly")
+                                        _deleteMonthly(index);
+                                    },
+                                    child:
+                                        Icon(Icons.delete, color: Colors.white),
+                                    color: Colors.red[700],
+                                  ),
+                                )),
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      _edit(budget.period, context, index);
+                                    },
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    color: Colors.teal[700],
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+                ;
+              });
+        });
+  }
+
+  Widget _buildListViewWeekly() {
+    return WatchBoxBuilder(
+        box: Hive.box('budgetweekly'),
+        builder: (context, budgetWeeklyBox) {
+          return ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                    color: Colors.grey,
+                    height: 0,
+                  ),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.only(bottom: 8),
+              itemCount: budgetWeeklyBox.length,
+              itemBuilder: (context, index) {
+                index = budgetWeeklyBox.length - 1 - index;
+                var budget = budgetWeeklyBox.getAt(index) as BudgetList;
+                return Column(
+                  children: <Widget>[
+                    MyExpansionTile(
+                      title: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(8),
+                        height: 50,
+                        width: double.infinity,
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  child: Icon(
+                                    budget.sym == "+"
+                                        ? Icons.add_circle
+                                        : Icons.remove_circle,
+                                    color: budget.sym == "+"
+                                        ? Colors.teal[700]
+                                        : Colors.red[700],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 6,
+                                child: Text(
+                                  "   ${budget.nom}",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "|",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.grey),
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "${budget.ket}",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                    ),
+                                  ))
+                            ]),
+                      ),
+                      backgroundColor: Colors.white,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      if (budget.period == "Daily")
+                                        _deleteDaily(index);
+                                      else if (budget.period == "Weekly")
+                                        _deleteWeekly(index);
+                                      else if (budget.period == "Monthly")
+                                        _deleteMonthly(index);
+                                    },
+                                    child:
+                                        Icon(Icons.delete, color: Colors.white),
+                                    color: Colors.red[700],
+                                  ),
+                                )),
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      _edit(budget.period, context, index);
+                                    },
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    color: Colors.teal[700],
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+                ;
+              });
+        });
+  }
+
+  Widget _buildListViewMonthly() {
+    return WatchBoxBuilder(
+        box: Hive.box('budgetmonthly'),
+        builder: (context, budgetMonthlyBox) {
+          return ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                    color: Colors.grey,
+                    height: 0,
+                  ),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.only(bottom: 8),
+              itemCount: budgetMonthlyBox.length,
+              itemBuilder: (context, index) {
+                index = budgetMonthlyBox.length - 1 - index;
+                var budget = budgetMonthlyBox.getAt(index) as BudgetList;
+                return Column(
+                  children: <Widget>[
+                    MyExpansionTile(
+                      title: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(8),
+                        height: 50,
+                        width: double.infinity,
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  child: Icon(
+                                    budget.sym == "+"
+                                        ? Icons.add_circle
+                                        : Icons.remove_circle,
+                                    color: budget.sym == "+"
+                                        ? Colors.teal[700]
+                                        : Colors.red[700],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 6,
+                                child: Text(
+                                  "   ${budget.nom}",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "|",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.grey),
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "${budget.ket}",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                    ),
+                                  ))
+                            ]),
+                      ),
+                      backgroundColor: Colors.white,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      if (budget.period == "Daily")
+                                        _deleteDaily(index);
+                                      else if (budget.period == "Weekly")
+                                        _deleteWeekly(index);
+                                      else if (budget.period == "Monthly")
+                                        _deleteMonthly(index);
+                                    },
+                                    child:
+                                        Icon(Icons.delete, color: Colors.white),
+                                    color: Colors.red[700],
+                                  ),
+                                )),
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      _edit(budget.period, context, index);
+                                    },
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    color: Colors.teal[700],
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+                ;
+              });
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -289,132 +660,15 @@ class _BudgetState extends State<Budget> {
             ),
             child: Column(children: <Widget>[
               ExpansionTile(
-                title: Text(
-                  "Daily",
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontStyle: FontStyle.italic),
-                ),
-                backgroundColor: Colors.grey[200],
-                children: <Widget>[
-                  ListView.separated(
-                      separatorBuilder: (context, index) => Divider(
-                            color: Colors.grey,
-                            height: 0,
-                          ),
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.only(bottom: 8),
-                      itemCount: _budgetDaily.length,
-                      itemBuilder: (context, index) {
-                        int newIndex = _budgetDaily.length - 1 - index;
-                        String period = "Daily";
-                        return Column(
-                          children: <Widget>[
-                            MyExpansionTile(
-                              title: Container(
-                                alignment: Alignment.centerLeft,
-                                padding: EdgeInsets.all(8),
-                                height: 50,
-                                width: double.infinity,
-                                child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          child: Icon(
-                                            _budgetDaily[newIndex]._symBudget ==
-                                                    "+"
-                                                ? Icons.add_circle
-                                                : Icons.remove_circle,
-                                            color: _budgetDaily[newIndex]
-                                                        ._symBudget ==
-                                                    "+"
-                                                ? Colors.teal[700]
-                                                : Colors.red[700],
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 6,
-                                        child: Text(
-                                          "   ${_budgetDaily[newIndex]._nomBudget}",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "|",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.grey),
-                                            ),
-                                          )),
-                                      Expanded(
-                                          flex: 3,
-                                          child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "${_budgetDaily[newIndex]._ketBudget}",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.black),
-                                            ),
-                                          ))
-                                    ]),
-                              ),
-                              backgroundColor: Colors.white,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                        flex: 2,
-                                        child: ButtonTheme(
-                                          minWidth: double.infinity,
-                                          height: 50,
-                                          child: RaisedButton(
-                                            onPressed: () {
-                                              _deleteDaily(newIndex);
-                                            },
-                                            child: Icon(Icons.delete,
-                                                color: Colors.white),
-                                            color: Colors.red[700],
-                                          ),
-                                        )),
-                                    Flexible(
-                                        flex: 2,
-                                        child: ButtonTheme(
-                                          minWidth: double.infinity,
-                                          height: 50,
-                                          child: RaisedButton(
-                                            onPressed: () {
-                                              _edit(period, context, newIndex);
-                                            },
-                                            child: Icon(
-                                              Icons.edit,
-                                              color: Colors.white,
-                                            ),
-                                            color: Colors.teal[700],
-                                          ),
-                                        )),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      }),
-                ],
-              )
+                  title: Text(
+                    "Daily",
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontStyle: FontStyle.italic),
+                  ),
+                  backgroundColor: Colors.grey[200],
+                  children: <Widget>[Container(child: _buildListViewDaily())])
             ]),
           ),
           Container(
@@ -425,133 +679,15 @@ class _BudgetState extends State<Budget> {
             ),
             child: Column(children: <Widget>[
               ExpansionTile(
-                title: Text(
-                  "Weekly",
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontStyle: FontStyle.italic),
-                ),
-                backgroundColor: Colors.grey[200],
-                children: <Widget>[
-                  ListView.separated(
-                      separatorBuilder: (context, index) => Divider(
-                            color: Colors.grey,
-                            height: 0,
-                          ),
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.only(bottom: 8),
-                      itemCount: _budgetWeekly.length,
-                      itemBuilder: (context, index) {
-                        int newIndex = _budgetWeekly.length - 1 - index;
-                        String period = "Weekly";
-                        return Column(
-                          children: <Widget>[
-                            MyExpansionTile(
-                              title: Container(
-                                alignment: Alignment.centerLeft,
-                                padding: EdgeInsets.all(8),
-                                height: 50,
-                                width: double.infinity,
-                                child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          child: Icon(
-                                            _budgetWeekly[newIndex]
-                                                        ._symBudget ==
-                                                    "+"
-                                                ? Icons.add_circle
-                                                : Icons.remove_circle,
-                                            color: _budgetWeekly[newIndex]
-                                                        ._symBudget ==
-                                                    "+"
-                                                ? Colors.teal[700]
-                                                : Colors.red[700],
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 6,
-                                        child: Text(
-                                          "   ${_budgetWeekly[newIndex]._nomBudget}",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "|",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.grey),
-                                            ),
-                                          )),
-                                      Expanded(
-                                          flex: 3,
-                                          child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "${_budgetWeekly[newIndex]._ketBudget}",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.black),
-                                            ),
-                                          ))
-                                    ]),
-                              ),
-                              backgroundColor: Colors.white,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                        flex: 2,
-                                        child: ButtonTheme(
-                                          minWidth: double.infinity,
-                                          height: 50,
-                                          child: RaisedButton(
-                                            onPressed: () {
-                                              _deleteWeekly(newIndex);
-                                            },
-                                            child: Icon(Icons.delete,
-                                                color: Colors.white),
-                                            color: Colors.red[700],
-                                          ),
-                                        )),
-                                    Flexible(
-                                        flex: 2,
-                                        child: ButtonTheme(
-                                          minWidth: double.infinity,
-                                          height: 50,
-                                          child: RaisedButton(
-                                            onPressed: () {
-                                              _edit(period, context, newIndex);
-                                            },
-                                            child: Icon(
-                                              Icons.edit,
-                                              color: Colors.white,
-                                            ),
-                                            color: Colors.teal[700],
-                                          ),
-                                        )),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      }),
-                ],
-              )
+                  title: Text(
+                    "Weekly",
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontStyle: FontStyle.italic),
+                  ),
+                  backgroundColor: Colors.grey[200],
+                  children: <Widget>[Container(child: _buildListViewWeekly())])
             ]),
           ),
           Container(
@@ -562,133 +698,15 @@ class _BudgetState extends State<Budget> {
             ),
             child: Column(children: <Widget>[
               ExpansionTile(
-                title: Text(
-                  "Monthly",
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontStyle: FontStyle.italic),
-                ),
-                backgroundColor: Colors.grey[200],
-                children: <Widget>[
-                  ListView.separated(
-                      separatorBuilder: (context, index) => Divider(
-                            color: Colors.grey,
-                            height: 0,
-                          ),
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.only(bottom: 8),
-                      itemCount: _budgetMonthly.length,
-                      itemBuilder: (context, index) {
-                        int newIndex = _budgetMonthly.length - 1 - index;
-                        String period = "Monthly";
-                        return Column(
-                          children: <Widget>[
-                            MyExpansionTile(
-                              title: Container(
-                                alignment: Alignment.centerLeft,
-                                padding: EdgeInsets.all(8),
-                                height: 50,
-                                width: double.infinity,
-                                child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          child: Icon(
-                                            _budgetMonthly[newIndex]
-                                                        ._symBudget ==
-                                                    "+"
-                                                ? Icons.add_circle
-                                                : Icons.remove_circle,
-                                            color: _budgetMonthly[newIndex]
-                                                        ._symBudget ==
-                                                    "+"
-                                                ? Colors.teal[700]
-                                                : Colors.red[700],
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 6,
-                                        child: Text(
-                                          "   ${_budgetMonthly[newIndex]._nomBudget}",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "|",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.grey),
-                                            ),
-                                          )),
-                                      Expanded(
-                                          flex: 3,
-                                          child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "${_budgetMonthly[newIndex]._ketBudget}",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.black),
-                                            ),
-                                          ))
-                                    ]),
-                              ),
-                              backgroundColor: Colors.white,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                        flex: 2,
-                                        child: ButtonTheme(
-                                          minWidth: double.infinity,
-                                          height: 50,
-                                          child: RaisedButton(
-                                            onPressed: () {
-                                              _deleteMonthly(newIndex);
-                                            },
-                                            child: Icon(Icons.delete,
-                                                color: Colors.white),
-                                            color: Colors.red[700],
-                                          ),
-                                        )),
-                                    Flexible(
-                                        flex: 2,
-                                        child: ButtonTheme(
-                                          minWidth: double.infinity,
-                                          height: 50,
-                                          child: RaisedButton(
-                                            onPressed: () {
-                                              _edit(period, context, newIndex);
-                                            },
-                                            child: Icon(
-                                              Icons.edit,
-                                              color: Colors.white,
-                                            ),
-                                            color: Colors.teal[700],
-                                          ),
-                                        )),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      }),
-                ],
-              )
+                  title: Text(
+                    "Monthly",
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontStyle: FontStyle.italic),
+                  ),
+                  backgroundColor: Colors.grey[200],
+                  children: <Widget>[Container(child: _buildListViewMonthly())])
             ]),
           ),
         ])));

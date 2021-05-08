@@ -11,17 +11,20 @@ List<Box> boxList = [];
 Future<List<Box>> _openBox() async {
   var boxHistory = await Hive.openBox('history');
   var boxBalance = await Hive.openBox("saldo");
-  var boxBudget = await Hive.openBox('budget');
+  var boxBudgetDaily = await Hive.openBox('budgetdaily');
+  var boxBudgetWeekly = await Hive.openBox('budgetweekly');
+  var boxBudgetMonthly = await Hive.openBox('budgetmonthly');
   boxList.add(boxHistory);
   boxList.add(boxBalance);
-  boxList.add(boxBudget);
+  boxList.add(boxBudgetDaily);
+  boxList.add(boxBudgetWeekly);
+  boxList.add(boxBudgetMonthly);
   return boxList;
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final appDirectory =
-  await path_provider.getApplicationDocumentsDirectory();
+  final appDirectory = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
 
   Hive.registerAdapter(HistoryAdapter());
@@ -49,8 +52,7 @@ class _MyAppState extends State<MyApp> {
             if (snapshot.hasError)
               return Text(snapshot.error.toString());
             else {
-              if(Hive.box('saldo').isEmpty)
-                Hive.box('saldo').put(0, Saldo(0));
+              if (Hive.box('saldo').isEmpty) Hive.box('saldo').put(0, Saldo(0));
               return Base();
             }
           } else

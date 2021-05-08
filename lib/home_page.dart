@@ -40,7 +40,19 @@ class _MainPageState extends State<MainPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Anda yakin ingin menghapus?"),
+            title: Column(
+              children: <Widget>[
+                Text(
+                  "Anda yakin ingin menghapus?",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Text(
+                  "!Riwayat dan catatan income/outcome akan terhapus!",
+                  style: TextStyle(color: Colors.red, fontSize: 14),
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
             actions: <Widget>[
               Row(
                 children: <Widget>[

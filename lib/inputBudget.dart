@@ -5,12 +5,12 @@ import 'package:hive/hive.dart';
 
 import 'classes/budget.dart';
 import 'classes/budget.dart';
+import 'classes/budget.dart';
 
 class inputBudget extends StatefulWidget {
   @override
   _inputBudgetState createState() => _inputBudgetState();
   final String sym;
-
 
   inputBudget(this.sym);
 }
@@ -23,7 +23,6 @@ class _inputBudgetState extends State<inputBudget> {
     if (widget.sym == "+")
       status = "Pemasukan";
     else if (widget.sym == "-") status = "Pengeluaran";
-
   }
 
   int nom;
@@ -33,13 +32,23 @@ class _inputBudgetState extends State<inputBudget> {
 
   //final saldoBox = Hive.box('saldo');
   var _formKey = GlobalKey<FormState>();
-  final budgetBox = Hive.box('budget');
+  final budgetDailyBox = Hive.box('budgetdaily');
+  final budgetWeeklyBox = Hive.box('budgetweekly');
+  final budgetMonthlyBox = Hive.box('budgetmonthly');
   String status;
   String _valueChoose;
   List _periode = ["Daily", "Weekly", "Monthly"];
 
-  void addBudget(BudgetList budget) {
-    budgetBox.add(budget);
+  void addBudgetDaily(BudgetList budget) {
+    budgetDailyBox.add(budget);
+  }
+
+  void addBudgetWeekly(BudgetList budget) {
+    budgetWeeklyBox.add(budget);
+  }
+
+  void addBudgetMonthly(BudgetList budget) {
+    budgetMonthlyBox.add(budget);
   }
 
   void _submit() {
@@ -48,18 +57,19 @@ class _inputBudgetState extends State<inputBudget> {
       return;
     }
     _formKey.currentState.save();
-    final newBudget = BudgetList(widget.sym, nom, ket, crDate, _valueChoose);;
-    addBudget(newBudget);
+    final newBudget = BudgetList(widget.sym, nom, ket, crDate, _valueChoose);
+    if (newBudget.period == "Daily")
+      addBudgetDaily(newBudget);
+    else if (newBudget.period == "Weekly")
+      addBudgetWeekly(newBudget);
+    else if (newBudget.period == "Monthly") addBudgetMonthly(newBudget);
 
-    nom=null;
-    ket=null;
-    crDate=null;
-    _valueChoose=null;
-
+    nom = null;
+    ket = null;
+    crDate = null;
+    _valueChoose = null;
 
     Navigator.pop(context);
-
-   // currentSaldo(newSaldo);
   }
 
   @override
@@ -121,7 +131,8 @@ class _inputBudgetState extends State<inputBudget> {
                       _valueChoose = newValue;
                     });
                   },
-                  validator: (value) => value == null ? 'Periode tidak boleh kosong' : null,
+                  validator: (value) =>
+                      value == null ? 'Periode tidak boleh kosong' : null,
                   items: _periode.map((valueItem) {
                     return DropdownMenuItem(
                       value: valueItem,
@@ -137,7 +148,7 @@ class _inputBudgetState extends State<inputBudget> {
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                     onPressed: () {
-                      crDate= DateTime.now();
+                      crDate = DateTime.now();
                       _submit();
                       setState(() {});
                     })
