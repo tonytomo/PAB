@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pab_dompet/classes/budget.dart';
 import 'package:pab_dompet/classes/saldo.dart';
 import 'package:hive/hive.dart';
+import 'package:cron/cron.dart';
 
 import 'classes/budget.dart';
 import 'classes/budget.dart';
@@ -51,6 +52,42 @@ class _inputBudgetState extends State<inputBudget> {
     budgetMonthlyBox.add(budget);
   }
 
+  void addTransactionDaily() {
+    // Pengurangan saldo dan penambahan transaksi di homepage
+  }
+
+  void addTransactionWeekly() {
+    // Pengurangan saldo dan penambahan transaksi di homepage
+  }
+
+  void addTransactionMonthly() {
+    // Pengurangan saldo dan penambahan transaksi di homepage
+  }
+
+  void scheduleDaily() {
+    final cron = Cron();
+    cron.schedule(new Schedule.parse('0 0 * * *'), () async {
+      // Daily
+      addTransactionDaily();
+    });
+  }
+
+  void scheduleWeekly() {
+    final cron = Cron();
+    cron.schedule(new Schedule.parse('0 0 0 0 *'), () async {
+      // Weekly
+      addTransactionWeekly();
+    });
+  }
+
+  void scheduleMonthly() {
+    final cron = Cron();
+    cron.schedule(new Schedule.parse('0 0 0 * 0'), () async {
+      // Monthly
+      addTransactionMonthly();
+    });
+  }
+
   void _submit() {
     final isValid = _formKey.currentState.validate();
     if (!isValid) {
@@ -58,11 +95,16 @@ class _inputBudgetState extends State<inputBudget> {
     }
     _formKey.currentState.save();
     final newBudget = BudgetList(widget.sym, nom, ket, crDate, _valueChoose);
-    if (newBudget.period == "Daily")
+    if (newBudget.period == "Daily") {
       addBudgetDaily(newBudget);
-    else if (newBudget.period == "Weekly")
+      scheduleDaily();
+    } else if (newBudget.period == "Weekly") {
       addBudgetWeekly(newBudget);
-    else if (newBudget.period == "Monthly") addBudgetMonthly(newBudget);
+      scheduleWeekly();
+    } else if (newBudget.period == "Monthly") {
+      addBudgetMonthly(newBudget);
+      scheduleMonthly();
+    }
 
     nom = null;
     ket = null;

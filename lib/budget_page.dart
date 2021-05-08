@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pab_dompet/home_page.dart';
 import 'package:pab_dompet/inputBudget.dart';
+import 'package:cron/cron.dart';
 
 import 'classes/budget.dart';
 import 'classes/budget.dart';
@@ -15,14 +16,6 @@ import 'customExtensions/ExpansionTile_alt.dart';
 class Budget extends StatefulWidget {
   @override
   _BudgetState createState() => _BudgetState();
-}
-
-class Cash {
-  Cash(this._nomBudget, this._ketBudget, this._symBudget);
-
-  int _nomBudget;
-  String _ketBudget;
-  String _symBudget;
 }
 
 class _BudgetState extends State<Budget> {
@@ -42,10 +35,6 @@ class _BudgetState extends State<Budget> {
   void deleteMonthlyBudget(int index) {
     budgetMonthlyBox.deleteAt(index);
   }
-
-  List<Cash> _budgetDaily = [];
-  List<Cash> _budgetWeekly = [];
-  List<Cash> _budgetMonthly = [];
 
   _edit(String period, BuildContext context, int index) {
     return showDialog(
@@ -82,26 +71,7 @@ class _BudgetState extends State<Budget> {
                 child: Text("Simpan"),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  setState(() {
-                    if (plus != null) {
-                      if (period == "Daily") {
-                        _budgetDaily[index]._nomBudget = plus;
-                      } else if (period == "Weekly") {
-                        _budgetWeekly[index]._nomBudget = plus;
-                      } else if (period == "Monthly") {
-                        _budgetMonthly[index]._nomBudget = plus;
-                      }
-                    }
-                    if (ket != null) {
-                      if (period == "Daily") {
-                        _budgetDaily[index]._ketBudget = ket;
-                      } else if (period == "Weekly") {
-                        _budgetWeekly[index]._ketBudget = ket;
-                      } else if (period == "Monthly") {
-                        _budgetMonthly[index]._ketBudget = ket;
-                      }
-                    }
-                  });
+                  setState(() {});
                 },
               )
             ],
