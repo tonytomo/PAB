@@ -25,7 +25,7 @@ class _GraphState extends State<Graph> {
               child: ExpansionTile(
                 title: Text(
                   "Income bulan ini",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
                 children: <Widget>[
                   ListView.separated(
@@ -56,7 +56,7 @@ class _GraphState extends State<Graph> {
               child: ExpansionTile(
                 title: Text(
                   "Outcome bulan ini",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
                 children: <Widget>[
                   ListView.separated(
@@ -92,7 +92,60 @@ class _GraphState extends State<Graph> {
               ),
             ),
             Container(
-              child: Text("will be prediction"),
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+              alignment: Alignment.center,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      "Prediksi Pendapatan per Tahun",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      "Pemasukan",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      "Pengeluaran",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      "Total = ",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:pab_dompet/home_page.dart';
+
+import 'classes/history.dart';
+import 'classes/saldo.dart';
+import 'classes/budget.dart';
 
 import 'customExtensions/ExpansionTile_alt.dart';
 
@@ -17,6 +22,17 @@ class Cash {
 }
 
 class _BudgetState extends State<Budget> {
+  final budgetBox = Hive.box('budget');
+  final historyBox = Hive.box('history');
+
+  void addBudget(Budget budget) {
+    budgetBox.add(budget);
+  }
+
+  void deleteBudget(int index) {
+    budgetBox.deleteAt(index);
+  }
+
   List<Cash> _budgetDaily = [];
   List<Cash> _budgetWeekly = [];
   List<Cash> _budgetMonthly = [];
@@ -68,7 +84,7 @@ class _BudgetState extends State<Budget> {
                         _budgetMonthly[index]._nomBudget = plus;
                       }
                     }
-                    if(ket != null) {
+                    if (ket != null) {
                       if (period == "Daily") {
                         _budgetDaily[index]._ketBudget = ket;
                       } else if (period == "Weekly") {
@@ -572,19 +588,20 @@ class _BudgetState extends State<Budget> {
                                 width: double.infinity,
                                 child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Expanded(
                                         flex: 1,
                                         child: Container(
                                           child: Icon(
-                                            _budgetWeekly[newIndex]._symBudget ==
-                                                "+"
+                                            _budgetWeekly[newIndex]
+                                                        ._symBudget ==
+                                                    "+"
                                                 ? Icons.add_circle
                                                 : Icons.remove_circle,
                                             color: _budgetWeekly[newIndex]
-                                                ._symBudget ==
-                                                "+"
+                                                        ._symBudget ==
+                                                    "+"
                                                 ? Colors.teal[700]
                                                 : Colors.red[700],
                                           ),
@@ -708,19 +725,20 @@ class _BudgetState extends State<Budget> {
                                 width: double.infinity,
                                 child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Expanded(
                                         flex: 1,
                                         child: Container(
                                           child: Icon(
-                                            _budgetMonthly[newIndex]._symBudget ==
-                                                "+"
+                                            _budgetMonthly[newIndex]
+                                                        ._symBudget ==
+                                                    "+"
                                                 ? Icons.add_circle
                                                 : Icons.remove_circle,
                                             color: _budgetMonthly[newIndex]
-                                                ._symBudget ==
-                                                "+"
+                                                        ._symBudget ==
+                                                    "+"
                                                 ? Colors.teal[700]
                                                 : Colors.red[700],
                                           ),

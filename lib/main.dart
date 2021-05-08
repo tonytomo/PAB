@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:pab_dompet/classes/budget.dart';
 import 'package:pab_dompet/classes/history.dart';
 import 'classes/saldo.dart';
 import 'package:pab_dompet/home_page.dart';
@@ -8,10 +9,12 @@ import 'package:pab_dompet/base_page.dart';
 
 List<Box> boxList = [];
 Future<List<Box>> _openBox() async {
-  var boxSession = await Hive.openBox('history');
-  var boxComment = await Hive.openBox("saldo");
-  boxList.add(boxSession);
-  boxList.add(boxComment);
+  var boxHistory = await Hive.openBox('history');
+  var boxBalance = await Hive.openBox("saldo");
+  var boxBudget = await Hive.openBox('budget');
+  boxList.add(boxHistory);
+  boxList.add(boxBalance);
+  boxList.add(boxBudget);
   return boxList;
 }
 
@@ -20,8 +23,11 @@ void main() async {
   final appDirectory =
   await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
+
   Hive.registerAdapter(HistoryAdapter());
   Hive.registerAdapter(SaldoAdapter());
+  Hive.registerAdapter(BudgetListAdapter());
+
   runApp(MaterialApp(home: MyApp()));
 }
 
@@ -42,8 +48,11 @@ class _MyAppState extends State<MyApp> {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError)
               return Text(snapshot.error.toString());
-            else
+            else {
+              if(Hive.box('saldo').isEmpty)
+                Hive.box('saldo').put(0, Saldo(0));
               return Base();
+            }
           } else
             return Scaffold();
         },
