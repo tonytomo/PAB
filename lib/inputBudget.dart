@@ -8,6 +8,8 @@ import 'classes/budget.dart';
 import 'classes/history.dart';
 import 'classes/saldo.dart';
 
+List <Cron> test =[];
+
 class inputBudget extends StatefulWidget {
   @override
   _inputBudgetState createState() => _inputBudgetState();
@@ -61,7 +63,8 @@ class _inputBudgetState extends State<inputBudget> {
 
   void scheduleDaily(BudgetList budget) {
     final cron = Cron();
-    cron.schedule(new Schedule.parse('0 0 * * *'), () async {
+    test.add(cron);
+    test[test.length-1].schedule(new Schedule.parse('* * * * *'), () async {
       // Daily
       // Penambahan saldo dan penambahan transaksi di homepage per hari
       var balance = saldoBox.getAt(0) as Saldo;
@@ -71,7 +74,9 @@ class _inputBudgetState extends State<inputBudget> {
 
       final newHistory = History(budget.sym, budget.nom, budget.ket);
       addHistory(newHistory);
+
     });
+
   }
 
   void scheduleWeekly(BudgetList budget) {
@@ -86,6 +91,7 @@ class _inputBudgetState extends State<inputBudget> {
 
       final newHistory = History(budget.sym, budget.nom, budget.ket);
       addHistory(newHistory);
+
     });
   }
 

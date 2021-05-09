@@ -110,6 +110,8 @@ class _BudgetState extends State<Budget> {
                     padding: EdgeInsets.all(15),
                     onPressed: () {
                       budgetDailyBox.deleteAt(index);
+                      test[index].close();
+                      test.removeAt(index);
                       setState(() {});
                       Navigator.of(context).pop();
                     },
@@ -321,7 +323,6 @@ class _BudgetState extends State<Budget> {
                     ),
                   ],
                 );
-                ;
               });
         });
   }
@@ -442,7 +443,6 @@ class _BudgetState extends State<Budget> {
                     ),
                   ],
                 );
-                ;
               });
         });
   }
@@ -563,7 +563,6 @@ class _BudgetState extends State<Budget> {
                     ),
                   ],
                 );
-                ;
               });
         });
   }
