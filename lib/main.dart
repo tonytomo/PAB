@@ -6,8 +6,11 @@ import 'classes/saldo.dart';
 import 'package:pab_dompet/home_page.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:pab_dompet/base_page.dart';
+import 'package:workmanager/workmanager.dart';
+
 
 List<Box> boxList = [];
+
 Future<List<Box>> _openBox() async {
   var boxHistory = await Hive.openBox('history');
   var boxBalance = await Hive.openBox("saldo");
@@ -22,8 +25,22 @@ Future<List<Box>> _openBox() async {
   return boxList;
 }
 
+const dailyTask = "dailyTask";
+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) {
+    switch (task) {
+      case dailyTask:
+       // sesuatu
+        break;
+    }
+    return Future.value(true);
+  });
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   final appDirectory = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
 
