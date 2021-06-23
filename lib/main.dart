@@ -51,6 +51,7 @@ void main() async {
   Hive.registerAdapter(HistoryAdapter());
   Hive.registerAdapter(SaldoAdapter());
   Hive.registerAdapter(BudgetListAdapter());
+  Hive.registerAdapter(DebtListAdapter());
 
   runApp(MaterialApp(home: MyApp()));
 }
