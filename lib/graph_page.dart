@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'classes/history.dart';
+import 'package:pab_dompet/classes/history.dart';
+import 'classes/saldo.dart';
+import 'customExtensions/string_operation.dart';
 
 class Graph extends StatefulWidget {
   @override
   _GraphState createState() => _GraphState();
 }
+
+final historyBox = Hive.box('history');
+final saldoBox = Hive.box('saldo');
 
 class _GraphState extends State<Graph> {
   @override
@@ -22,62 +31,14 @@ class _GraphState extends State<Graph> {
                 border:
                     Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
               ),
-              child: ExpansionTile(
-                title: Text(
-                  "Income bulan ini",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
-                ),
-                children: <Widget>[
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    separatorBuilder: (context, index) => Divider(
-                      color: Colors.grey,
-                      height: 0,
-                    ),
-                    itemCount: 0,
-                    // itemCount: _history.length < 10 ? _history.length : 10,
-                    itemBuilder: (context, index) {
-                      // int newIndex = _history.length - 1 - index;
-                      return ListTile(
-                        title: Text("income"),
-                      );
-                    },
-                  ),
-                ],
-              ),
+              child: _ExpansionTileIncome("Income"),
             ),
             Container(
               decoration: BoxDecoration(
                 border:
                     Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
               ),
-              child: ExpansionTile(
-                title: Text(
-                  "Outcome bulan ini",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
-                ),
-                children: <Widget>[
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    separatorBuilder: (context, index) => Divider(
-                      color: Colors.grey,
-                      height: 0,
-                    ),
-                    itemCount: 0,
-                    // itemCount: _history.length < 10 ? _history.length : 10,
-                    itemBuilder: (context, index) {
-                      // int newIndex = _history.length - 1 - index;
-                      return ListTile(
-                        title: Text("outcome"),
-                      );
-                    },
-                  ),
-                ],
-              ),
+              child: _ExpansionTileOutcome("Outcome"),
             ),
             Container(
               alignment: Alignment.centerLeft,
@@ -86,10 +47,7 @@ class _GraphState extends State<Graph> {
                     Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
               ),
               padding: EdgeInsets.all(15),
-              child: Text(
-                "Total = ",
-                style: TextStyle(fontSize: 20),
-              ),
+              child: _RowBalance("Total"),
             ),
             Container(
               padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
@@ -100,7 +58,8 @@ class _GraphState extends State<Graph> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       border: Border(
-                          bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                          bottom:
+                              BorderSide(width: 2.0, color: Colors.grey[100])),
                     ),
                     padding: EdgeInsets.all(15),
                     child: Text(
@@ -115,10 +74,7 @@ class _GraphState extends State<Graph> {
                           bottom: BorderSide(width: 2.0, color: Colors.grey)),
                     ),
                     padding: EdgeInsets.all(15),
-                    child: Text(
-                      "Pemasukan",
-                      style: TextStyle(fontSize: 20),
-                    ),
+                    child: _Row("Pemasukan", 60000),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
@@ -127,23 +83,16 @@ class _GraphState extends State<Graph> {
                           bottom: BorderSide(width: 2.0, color: Colors.grey)),
                     ),
                     padding: EdgeInsets.all(15),
-                    child: Text(
-                      "Pengeluaran",
-                      style: TextStyle(fontSize: 20),
-                    ),
+                    child: _Row("Pengeluaran", 20000),
                   ),
                   Container(
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(width: 2.0, color: Colors.grey)),
-                    ),
-                    padding: EdgeInsets.all(15),
-                    child: Text(
-                      "Total = ",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                      ),
+                      padding: EdgeInsets.all(15),
+                      child: _Row("Total", 40000)),
                 ],
               ),
             ),
@@ -152,4 +101,131 @@ class _GraphState extends State<Graph> {
       ),
     );
   }
+}
+
+Widget _RowBalance(String string) {
+  var balance = saldoBox.getAt(0) as Saldo;
+  var number = balance.nom.toString();
+  return Container(
+      alignment: Alignment.centerLeft,
+      child:
+          Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
+        Expanded(
+          flex: 1,
+          child: Text(
+            string,
+            style: TextStyle(fontSize: 20, color: Colors.grey),
+          ),
+        ),
+        Expanded(
+            flex: 1,
+            child: Container(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "Rp " + number,
+                style: TextStyle(fontSize: 20),
+              ),
+            )),
+      ]));
+}
+
+Widget _Row(String string, int num) {
+  var number = num.toString();
+  return Container(
+      alignment: Alignment.centerLeft,
+      child:
+      Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
+        Expanded(
+          flex: 1,
+          child: Text(
+            string,
+            style: TextStyle(fontSize: 20, color: Colors.grey),
+          ),
+        ),
+        Expanded(
+            flex: 1,
+            child: Container(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "Rp " + number,
+                style: TextStyle(fontSize: 20),
+              ),
+            )),
+      ]));
+}
+
+Widget _ExpansionTileIncome(String title) {
+  return WatchBoxBuilder(
+      box: Hive.box('history'),
+      builder: (context, historyBox) {
+        return ExpansionTile(
+          title: Text(
+            title,
+            style: TextStyle(fontSize: 20, color: Colors.grey),
+          ),
+          children: <Widget>[
+            ListView.separated(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              separatorBuilder: (context, index) => Divider(
+                color: Colors.grey,
+                height: 0,
+              ),
+              itemCount: historyBox.length < 10 ? historyBox.length : 10,
+              itemBuilder: (context, index) {
+                final history = historyBox.getAt(index) as History;
+                if (history.sym == "+") {
+                  return ListTile(
+                    title: Text("${history.nominal}"),
+                  );
+                } else {
+                  return SizedBox(height: 0,);
+                  // return ListTile(
+                  //   title: Text("Outcome"),
+                  // );
+                }
+              },
+            ),
+          ],
+        );
+      });
+}
+
+Widget _ExpansionTileOutcome(String title) {
+  return WatchBoxBuilder(
+      box: Hive.box('history'),
+      builder: (context, historyBox) {
+        return ExpansionTile(
+          title: Text(
+            title,
+            style: TextStyle(fontSize: 20, color: Colors.grey),
+          ),
+          children: <Widget>[
+            ListView.separated(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              separatorBuilder: (context, index) => Divider(
+                color: Colors.grey,
+                height: 0,
+              ),
+              itemCount: historyBox.length < 10 ? historyBox.length : 10,
+              itemBuilder: (context, index) {
+                final history = historyBox.getAt(index) as History;
+                if (history.sym == "-") {
+                  return ListTile(
+                    title: Text("${history.nominal}"),
+                  );
+                } else {
+                  return SizedBox(height: 0,);
+                  // return ListTile(
+                  //   title: Text("Income"),
+                  // );
+                }
+              },
+            ),
+          ],
+        );
+      });
 }
