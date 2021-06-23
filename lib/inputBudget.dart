@@ -3,7 +3,6 @@ import 'classes/budget.dart';
 import 'classes/saldo.dart';
 import 'package:hive/hive.dart';
 import 'package:cron/cron.dart';
-import 'package:workmanager/workmanager.dart';
 
 import 'classes/budget.dart';
 import 'classes/history.dart';

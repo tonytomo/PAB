@@ -35,7 +35,7 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     switch (task) {
       case dailyTask:
-        print("WOY UDAH 10 detik");
+       // sesuatu
         break;
     }
     return Future.value(true);
@@ -51,7 +51,6 @@ void main() async {
   Hive.registerAdapter(HistoryAdapter());
   Hive.registerAdapter(SaldoAdapter());
   Hive.registerAdapter(BudgetListAdapter());
-  Hive.registerAdapter(DebtListAdapter());
 
   runApp(MaterialApp(home: MyApp()));
 }
