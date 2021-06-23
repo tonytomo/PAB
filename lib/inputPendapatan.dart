@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pab_dompet/classes/history.dart';
-import 'package:pab_dompet/classes/saldo.dart';
+import 'classes/history.dart';
+import 'classes/saldo.dart';
 import 'package:hive/hive.dart';
 
 class inputPendapatan extends StatefulWidget {

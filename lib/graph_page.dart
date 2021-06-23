@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pab_dompet/budget_page.dart';
+import 'budget_page.dart';
 import 'classes/history.dart';
-import 'package:pab_dompet/classes/history.dart';
+import 'classes/history.dart';
 import 'classes/saldo.dart';
 import 'classes/budget.dart';
 import 'customExtensions/string_operation.dart';

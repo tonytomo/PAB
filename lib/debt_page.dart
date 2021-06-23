@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:pab_dompet/classes/debt.dart';
+import 'classes/debt.dart';
 import 'customExtensions/ExpansionTile_alt.dart';
 import 'home_page.dart';
 

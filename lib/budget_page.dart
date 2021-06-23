@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pab_dompet/home_page.dart';
-import 'package:pab_dompet/inputBudget.dart';
+import 'home_page.dart';
+import 'inputBudget.dart';
 import 'package:cron/cron.dart';
 
 import 'classes/budget.dart';

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:pab_dompet/classes/budget.dart';
-import 'package:pab_dompet/classes/history.dart';
+import 'classes/budget.dart';
+import 'classes/history.dart';
 import 'classes/debt.dart';
-import 'package:pab_dompet/splashscreen.dart';
+import 'splashscreen.dart';
 import 'classes/saldo.dart';
-import 'package:pab_dompet/home_page.dart';
+import 'home_page.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:pab_dompet/base_page.dart';
+import 'base_page.dart';
 import 'package:workmanager/workmanager.dart';
 
 
@@ -51,6 +51,7 @@ void main() async {
   Hive.registerAdapter(HistoryAdapter());
   Hive.registerAdapter(SaldoAdapter());
   Hive.registerAdapter(BudgetListAdapter());
+  Hive.registerAdapter(DebtListAdapter());
 
   runApp(MaterialApp(home: MyApp()));
 }
