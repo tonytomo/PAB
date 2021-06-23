@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:pab_dompet/classes/budget.dart';
 import 'package:pab_dompet/classes/history.dart';
+import 'package:pab_dompet/splashscreen.dart';
 import 'classes/saldo.dart';
 import 'package:pab_dompet/home_page.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -60,7 +61,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Coba Aja",
+      title: "Dompet.in",
       theme: ThemeData(fontFamily: 'Oswald'),
       home: FutureBuilder(
         future: _openBox(),
@@ -70,7 +71,7 @@ class _MyAppState extends State<MyApp> {
               return Text(snapshot.error.toString());
             else {
               if (Hive.box('saldo').isEmpty) Hive.box('saldo').put(0, Saldo(0));
-              return Base();
+              return SplashScreen();
             }
           } else
             return Scaffold();
