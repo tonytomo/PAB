@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pab_dompet/budget_page.dart';
 import 'classes/history.dart';
 import 'package:pab_dompet/classes/history.dart';
 import 'classes/saldo.dart';
-import 'classes/budget.dart';
 import 'customExtensions/string_operation.dart';
 
 class Graph extends StatefulWidget {
@@ -15,10 +13,6 @@ class Graph extends StatefulWidget {
 
 final historyBox = Hive.box('history');
 final saldoBox = Hive.box('saldo');
-
-final budgetDailyBox = Hive.box('budgetdaily');
-final budgetWeeklyBox = Hive.box('budgetweekly');
-final budgetMonthlyBox = Hive.box('budgetmonthly');
 
 class _GraphState extends State<Graph> {
   @override
@@ -80,7 +74,7 @@ class _GraphState extends State<Graph> {
                           bottom: BorderSide(width: 2.0, color: Colors.grey)),
                     ),
                     padding: EdgeInsets.all(15),
-                    child: _RowIncome("Pemasukan"),
+                    child: _Row("Pemasukan", 60000),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
@@ -89,7 +83,7 @@ class _GraphState extends State<Graph> {
                           bottom: BorderSide(width: 2.0, color: Colors.grey)),
                     ),
                     padding: EdgeInsets.all(15),
-                    child: _RowOutcome("Pengeluaran"),
+                    child: _Row("Pengeluaran", 20000),
                   ),
                   Container(
                       alignment: Alignment.centerLeft,
@@ -98,7 +92,7 @@ class _GraphState extends State<Graph> {
                             bottom: BorderSide(width: 2.0, color: Colors.grey)),
                       ),
                       padding: EdgeInsets.all(15),
-                      child: _RowTotal("Total")),
+                      child: _Row("Total", 40000)),
                 ],
               ),
             ),
@@ -107,67 +101,6 @@ class _GraphState extends State<Graph> {
       ),
     );
   }
-}
-
-int income, outcome;
-
-Widget _RowIncome(String string) {
-  int sum = 0;
-  for (int i = 0; i < budgetDailyBox.length; i++) {
-    final budget = budgetDailyBox.getAt(i) as BudgetList;
-    if (budget.sym == "+") {
-      sum += budget.nom * 365;
-    }
-  }
-
-  for (int i = 0; i < budgetWeeklyBox.length; i++) {
-    final budget = budgetWeeklyBox.getAt(i) as BudgetList;
-    if (budget.sym == "+") {
-      sum += budget.nom * 52;
-    }
-  }
-
-  for (int i = 0; i < budgetMonthlyBox.length; i++) {
-    final budget = budgetMonthlyBox.getAt(i) as BudgetList;
-    if (budget.sym == "+") {
-      sum += budget.nom * 12;
-    }
-  }
-  income = sum;
-  return _Row(string, sum);
-}
-
-Widget _RowOutcome(String string) {
-  int sum = 0;
-  for (int i = 0; i < budgetDailyBox.length; i++) {
-    final budget = budgetDailyBox.getAt(i) as BudgetList;
-    if (budget.sym == "-") {
-      sum += budget.nom * 365;
-    }
-  }
-
-  for (int i = 0; i < budgetWeeklyBox.length; i++) {
-    final budget = budgetWeeklyBox.getAt(i) as BudgetList;
-    if (budget.sym == "-") {
-      sum += budget.nom * 52;
-    }
-  }
-
-  for (int i = 0; i < budgetMonthlyBox.length; i++) {
-    final budget = budgetMonthlyBox.getAt(i) as BudgetList;
-    if (budget.sym == "-") {
-      sum += budget.nom * 12;
-    }
-  }
-  outcome = sum;
-  return _Row(string, sum);
-}
-
-Widget _RowTotal(String string) {
-  int total;
-  total = income - outcome;
-
-  return _Row(string, total);
 }
 
 Widget _RowBalance(String string) {
@@ -200,8 +133,8 @@ Widget _Row(String string, int num) {
   var number = num.toString();
   return Container(
       alignment: Alignment.centerLeft,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
+      child:
+      Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
         Expanded(
           flex: 1,
           child: Text(
@@ -243,18 +176,11 @@ Widget _ExpansionTileIncome(String title) {
               itemBuilder: (context, index) {
                 final history = historyBox.getAt(index) as History;
                 if (history.sym == "+") {
-                  return Container(
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(width: 2.0, color: Colors.grey)),
-                      ),
-                      padding: EdgeInsets.all(15),
-                      child: _Row(history.ket, history.nominal));
-                } else {
-                  return SizedBox(
-                    height: 0,
+                  return ListTile(
+                    title: Text("${history.nominal}"),
                   );
+                } else {
+                  return SizedBox(height: 0,);
                   // return ListTile(
                   //   title: Text("Outcome"),
                   // );
@@ -288,14 +214,11 @@ Widget _ExpansionTileOutcome(String title) {
               itemBuilder: (context, index) {
                 final history = historyBox.getAt(index) as History;
                 if (history.sym == "-") {
-                  return Container(
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.all(15),
-                      child: _Row(history.ket, history.nominal));
-                } else {
-                  return SizedBox(
-                    height: 0,
+                  return ListTile(
+                    title: Text("${history.nominal}"),
                   );
+                } else {
+                  return SizedBox(height: 0,);
                   // return ListTile(
                   //   title: Text("Income"),
                   // );
