@@ -89,103 +89,101 @@ class _MainPageState extends State<MainPage> {
           leading: Icon(Icons.account_balance_wallet_rounded),
           title: Text("Dompet.in"),
           backgroundColor: Colors.teal[700]),
-      body: Column(children: <Widget>[
-        Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: 15),
-            height: 100,
-            width: double.infinity,
-            color: Colors.black12,
-            child: _showBalance()),
-        Row(
-          children: <Widget>[
-            Flexible(
-                flex: 2,
-                child: ButtonTheme(
-                  minWidth: double.infinity,
-                  height: 50,
-                  child: RaisedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                inputPendapatan(plus, ket, "+")),
-                      );
-                      //inputIncome(context);
-                    },
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
-                    color: Colors.teal[700],
+      body: Stack(children: [
+        Column(children: <Widget>[
+          Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 15),
+              height: 100,
+              width: double.infinity,
+              color: Colors.black12,
+              child: _showBalance()),
+          Container(
+            height: 50,
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    width: double.infinity,
                   ),
-                )),
-            Flexible(
-                flex: 2,
-                child: ButtonTheme(
-                  minWidth: double.infinity,
-                  height: 50,
-                  child: RaisedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                inputPendapatan(plus, ket, "-")),
-                      );
-                    },
-                    child: Icon(
-                      Icons.remove,
-                      color: Colors.white,
-                    ),
-                    color: Colors.red[900],
-                  ),
-                ))
-          ],
-        ),
-        Container(
-          height: 50,
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: double.infinity,
                 ),
-              ),
-              Expanded(
-                flex: 4,
-                child: Text(
-                  "Transaksi terakhir",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontStyle: FontStyle.italic,
+                Expanded(
+                  flex: 4,
+                  child: Text(
+                    "Transaksi terakhir",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
-              Expanded(
-                flex: 1,
-                child: IconButton(
-                    alignment: Alignment.centerRight,
-                    icon: Icon(Icons.auto_delete),
-                    color: Colors.white,
-                    onPressed: () {
-                      deleteHistory();
-                    }),
-              ),
-            ],
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                      alignment: Alignment.centerRight,
+                      icon: Icon(Icons.auto_delete),
+                      color: Colors.white,
+                      onPressed: () {
+                        deleteHistory();
+                      }),
+                ),
+              ],
+            ),
+            color: Colors.black,
           ),
-          color: Colors.black,
-        ),
-        Flexible(
-          flex: 1,
-          child: _buildListView(),
-        )
+          Flexible(
+            flex: 1,
+            child: _buildListView(),
+          )
+        ]),
+        Positioned(
+            bottom: 80,
+            right: 20,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  onPrimary: Colors.white,
+                  primary: Colors.teal[700].withOpacity(0.8),
+                  onSurface: Colors.grey,
+                  shape: CircleBorder(),
+                  minimumSize: Size(50, 50)),
+              child: Icon(
+                Icons.add,
+                size: 30,
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => inputPendapatan(plus, ket, "+")));
+              },
+            )),
+        Positioned(
+            bottom: 20,
+            right: 20,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  onPrimary: Colors.white,
+                  primary: Colors.red.withOpacity(0.8),
+                  onSurface: Colors.grey,
+                  shape: CircleBorder(),
+                  minimumSize: Size(50, 50)),
+              child: Icon(
+                Icons.remove,
+                size: 30,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => inputPendapatan(plus, ket, "-")),
+                );
+              },
+            ))
       ]),
     );
   }
@@ -213,9 +211,13 @@ class _MainPageState extends State<MainPage> {
                 index = historyBox.length - index - 1;
                 final history = historyBox.getAt(index) as History;
                 return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.black12,
+                    ),
                     alignment: Alignment.centerLeft,
-                    color: Colors.black12,
-                    padding: EdgeInsets.all(8),
+
+                    padding: EdgeInsets.all(10),
                     height: 50,
                     margin: EdgeInsets.all(2),
                     child: Row(
@@ -251,7 +253,7 @@ class _MainPageState extends State<MainPage> {
                               child: Text(
                                 "|",
                                 style:
-                                    TextStyle(fontSize: 20, color: Colors.grey),
+                                TextStyle(fontSize: 20, color: Colors.grey),
                               ),
                             )),
                         Expanded(
