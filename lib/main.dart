@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:pab_dompet/classes/budget.dart';
 import 'package:pab_dompet/classes/history.dart';
+import 'classes/debt.dart';
 import 'package:pab_dompet/splashscreen.dart';
 import 'classes/saldo.dart';
 import 'package:pab_dompet/home_page.dart';
@@ -18,21 +19,23 @@ Future<List<Box>> _openBox() async {
   var boxBudgetDaily = await Hive.openBox('budgetdaily');
   var boxBudgetWeekly = await Hive.openBox('budgetweekly');
   var boxBudgetMonthly = await Hive.openBox('budgetmonthly');
+  var boxDebt = await Hive.openBox('debtlist');
   boxList.add(boxHistory);
   boxList.add(boxBalance);
   boxList.add(boxBudgetDaily);
   boxList.add(boxBudgetWeekly);
   boxList.add(boxBudgetMonthly);
+  boxList.add(boxDebt);
   return boxList;
 }
 
 const dailyTask = "dailyTask";
 
 void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) {
+  Workmanager().executeTask((task, inputData) async {
     switch (task) {
       case dailyTask:
-       // sesuatu
+        print("WOY UDAH 10 detik");
         break;
     }
     return Future.value(true);
