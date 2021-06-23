@@ -87,7 +87,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
           leading: Icon(Icons.account_balance_wallet_rounded),
-          title: Text("DompetAja"),
+          title: Text("Dompet.in"),
           backgroundColor: Colors.teal[700]),
       body: Column(children: <Widget>[
         Container(
