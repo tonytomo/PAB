@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pab_dompet/budget_page.dart';
-import 'package:pab_dompet/debt_page.dart';
-import 'package:pab_dompet/graph_page.dart';
-import 'package:pab_dompet/home_page.dart';
+import 'package:Dompet.in/budget_page.dart';
+import 'package:Dompet.in/debt_page.dart';
+import 'package:Dompet.in/graph_page.dart';
+import 'package:Dompet.in/home_page.dart';
 
 class Base extends StatefulWidget {
   @override

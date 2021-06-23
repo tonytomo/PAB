@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:pab_dompet/classes/budget.dart';
-import 'package:pab_dompet/classes/history.dart';
-import 'package:pab_dompet/splashscreen.dart';
+import 'package:Dompet.in/classes/budget.dart';
+import 'package:Dompet.in/classes/history.dart';
+import 'package:Dompet.in/splashscreen.dart';
 import 'classes/saldo.dart';
-import 'package:pab_dompet/home_page.dart';
+import 'package:Dompet.in/home_page.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:pab_dompet/base_page.dart';
+import 'package:Dompet.in/base_page.dart';
 import 'package:workmanager/workmanager.dart';
 
 

@@ -4,8 +4,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'classes/history.dart';
 import 'classes/saldo.dart';
-import 'package:pab_dompet/classes/history.dart';
-import 'package:pab_dompet/inputPendapatan.dart';
+import 'package:Dompet.in/classes/history.dart';
+import 'package:Dompet.in/inputPendapatan.dart';
 import 'customExtensions/string_operation.dart';
 
 var plus = 0;
