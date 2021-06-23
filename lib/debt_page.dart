@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:pab_dompet/classes/debt.dart';
 import 'customExtensions/ExpansionTile_alt.dart';
 import 'home_page.dart';
 
@@ -7,6 +9,8 @@ class Debt extends StatefulWidget {
   @override
   _DebtState createState() => _DebtState();
 }
+
+final debtBox = Hive.box('debtlist');
 
 class Debts {
   Debts(this._nama, this._nominal, this._jenis);
@@ -17,7 +21,6 @@ class Debts {
 }
 
 class _DebtState extends State<Debt> {
-  List<Debts> _debt = [];
 
   inputPiutangSaya(BuildContext context) {
     return showDialog(
@@ -53,9 +56,10 @@ class _DebtState extends State<Debt> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    if (plus != null && ket != null)
-                      _debt.add(Debts(ket, plus, "+"));
-
+                    final newDebt = DebtList(plus, "+", ket);
+                    if (plus != null && ket != null) {
+                      debtBox.add(newDebt);
+                    }
                     plus = null;
                     ket = null;
                   });
@@ -100,9 +104,10 @@ class _DebtState extends State<Debt> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    if (plus != null && ket != null)
-                      _debt.add(Debts(ket, plus, "-"));
-
+                    final newDebt = DebtList(plus, "-", ket);
+                    if (plus != null && ket != null) {
+                      debtBox.add(newDebt);
+                    }
                     plus = null;
                     ket = null;
                   });
@@ -139,7 +144,7 @@ class _DebtState extends State<Debt> {
                     ),
                     padding: EdgeInsets.all(15),
                     onPressed: () {
-                      _debt.removeAt(index);
+                      debtBox.deleteAt(index);
                       setState(() {});
                       Navigator.of(context).pop();
                     },
@@ -206,9 +211,10 @@ class _DebtState extends State<Debt> {
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   padding: const EdgeInsets.only(bottom: 8),
-                  itemCount: _debt.length,
+                  itemCount: debtBox.length,
                   itemBuilder: (context, index) {
-                    int newIndex = _debt.length - 1 - index;
+                    int newIndex = debtBox.length - 1 - index;
+                    final debt = debtBox.getAt(newIndex) as DebtList;
                     return Column(
                       children: <Widget>[
                         MyExpansionTile(
@@ -225,10 +231,10 @@ class _DebtState extends State<Debt> {
                                     flex: 1,
                                     child: Container(
                                       child: Icon(
-                                        _debt[newIndex]._jenis == "+"
+                                        debt.sym == "+"
                                             ? Icons.attach_money
                                             : Icons.money_off,
-                                        color: _debt[newIndex]._jenis == "+"
+                                        color: debt.sym == "+"
                                             ? Colors.teal[700]
                                             : Colors.red[700],
                                       ),
@@ -237,7 +243,7 @@ class _DebtState extends State<Debt> {
                                   Expanded(
                                     flex: 6,
                                     child: Text(
-                                      "${_debt[newIndex]._nominal}",
+                                      "${debt.nom}",
                                       style: TextStyle(
                                           fontSize: 20, color: Colors.black),
                                     ),
@@ -253,7 +259,7 @@ class _DebtState extends State<Debt> {
                                       child: Container(
                                         alignment: Alignment.centerRight,
                                         child: Text(
-                                          "${_debt[newIndex]._nama}",
+                                          "${debt.name}",
                                           style: TextStyle(
                                               fontSize: 20,
                                               color: Colors.black),
@@ -280,7 +286,7 @@ class _DebtState extends State<Debt> {
                                           _deleteDebts(newIndex);
                                         },
                                         child: Text(
-                                          _debt[newIndex]._jenis == "+"
+                                          debt.sym == "+"
                                               ? "Sudah dibayar"
                                               : "Sudah membayar",
                                           style: TextStyle(

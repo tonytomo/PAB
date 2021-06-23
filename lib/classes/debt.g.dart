@@ -19,16 +19,19 @@ class DebtListAdapter extends TypeAdapter<DebtList> {
     return DebtList(
       fields[0] as int,
       fields[1] as String,
+      fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, DebtList obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.nom)
       ..writeByte(1)
+      ..write(obj.sym)
+      ..writeByte(2)
       ..write(obj.name);
   }
 

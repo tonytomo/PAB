@@ -7,7 +7,9 @@ class DebtList {
   @HiveField(0)
   final int nom;
   @HiveField(1)
+  final String sym;
+  @HiveField(2)
   final String name;
 
-  DebtList(this.nom, this.name);
+  DebtList(this.nom, this.sym, this.name);
 }
