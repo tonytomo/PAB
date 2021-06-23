@@ -19,6 +19,9 @@ class Budget extends StatefulWidget {
 }
 
 class _BudgetState extends State<Budget> {
+  int plus;
+  String ket;
+
   final budgetDailyBox = Hive.box('budgetdaily');
   final budgetWeeklyBox = Hive.box('budgetweekly');
   final budgetMonthlyBox = Hive.box('budgetmonthly');
@@ -71,7 +74,42 @@ class _BudgetState extends State<Budget> {
                 child: Text("Simpan"),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  setState(() {});
+                  setState(() {
+                    if (plus != null) {
+                      if (period == "Daily") {
+                        final budget1 =
+                            budgetDailyBox.getAt(index) as BudgetList;
+                        budget1.nom = plus;
+                      } else if (period == "Weekly") {
+                        final budget2 =
+                            budgetWeeklyBox.getAt(index) as BudgetList;
+                        budget2.nom = plus;
+                      } else if (period == "Monthly") {
+                        final budget3 =
+                            budgetMonthlyBox.getAt(index) as BudgetList;
+                        budget3.nom = plus;
+                      }
+                    }
+                    if (ket != null) {
+                      if (period == "Daily") {
+                        final budget1 =
+                            budgetDailyBox.getAt(index) as BudgetList;
+                        budget1.ket = ket;
+                      } else if (period == "Weekly") {
+                        final budget2 =
+                            budgetWeeklyBox.getAt(index) as BudgetList;
+                        budget2.ket = ket;
+                      } else if (period == "Monthly") {
+                        final budget3 =
+                            budgetMonthlyBox.getAt(index) as BudgetList;
+                        budget3.nom = plus;
+                        budget3.ket = ket;
+                      }
+                    }
+
+                    plus = null;
+                    ket = null;
+                  });
                 },
               )
             ],
@@ -240,8 +278,8 @@ class _BudgetState extends State<Budget> {
                                 child: Container(
                                   child: Icon(
                                     budget.sym == "+"
-                                        ? Icons.add_circle
-                                        : Icons.remove_circle,
+                                        ? Icons.add_circle_outline_outlined
+                                        : Icons.remove_circle_outline,
                                     color: budget.sym == "+"
                                         ? Colors.teal[700]
                                         : Colors.red[700],
@@ -342,7 +380,7 @@ class _BudgetState extends State<Budget> {
               padding: const EdgeInsets.only(bottom: 8),
               itemCount: budgetWeeklyBox.length,
               itemBuilder: (context, index) {
-                index = budgetWeeklyBox.length - 1 - index;
+                // index = budgetWeeklyBox.length - 1 - index;
                 var budget = budgetWeeklyBox.getAt(index) as BudgetList;
                 return Column(
                   children: <Widget>[
@@ -360,8 +398,8 @@ class _BudgetState extends State<Budget> {
                                 child: Container(
                                   child: Icon(
                                     budget.sym == "+"
-                                        ? Icons.add_circle
-                                        : Icons.remove_circle,
+                                        ? Icons.add_circle_outline_outlined
+                                        : Icons.remove_circle_outline,
                                     color: budget.sym == "+"
                                         ? Colors.teal[700]
                                         : Colors.red[700],
@@ -480,8 +518,8 @@ class _BudgetState extends State<Budget> {
                                 child: Container(
                                   child: Icon(
                                     budget.sym == "+"
-                                        ? Icons.add_circle
-                                        : Icons.remove_circle,
+                                        ? Icons.add_circle_outline_outlined
+                                        : Icons.remove_circle_outline,
                                     color: budget.sym == "+"
                                         ? Colors.teal[700]
                                         : Colors.red[700],
@@ -575,109 +613,121 @@ class _BudgetState extends State<Budget> {
             leading: Icon(Icons.calculate_outlined),
             title: Text("Budget"),
             backgroundColor: Colors.teal[700]),
-        body: SingleChildScrollView(
-            child: Column(children: <Widget>[
-          Row(
-            children: <Widget>[
-              Flexible(
-                  flex: 2,
-                  child: ButtonTheme(
-                    minWidth: double.infinity,
-                    height: 50,
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => inputBudget("+")),
-                        );
-                      },
-                      child: Text(
-                        "+",
-                        style: TextStyle(color: Colors.white, fontSize: 30),
+        body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/pattern.png'),
+                  repeat: ImageRepeat.repeat),
+            ),
+            child: ListView(children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.8),
+                  border: Border(
+                      bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                ),
+                child: Column(children: <Widget>[
+                  ExpansionTile(
+                      title: Text(
+                        "Daily",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic),
                       ),
-                      color: Colors.teal[700],
-                    ),
-                  )),
-              Flexible(
-                  flex: 2,
-                  child: ButtonTheme(
-                    minWidth: double.infinity,
-                    height: 50,
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => inputBudget("-")),
-                        );
-                      },
-                      child: Text(
-                        "-",
-                        style: TextStyle(color: Colors.white, fontSize: 30),
+                      children: <Widget>[
+                        Container(child: _buildListViewDaily())
+                      ])
+                ]),
+              ),
+              Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.8),
+                  border: Border(
+                      bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                ),
+                child: Column(children: <Widget>[
+                  ExpansionTile(
+                      title: Text(
+                        "Weekly",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic),
                       ),
-                      color: Colors.red[900],
-                    ),
-                  )),
-            ],
-          ),
-          Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border:
-                  Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
-            ),
-            child: Column(children: <Widget>[
-              ExpansionTile(
-                  title: Text(
-                    "Daily",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontStyle: FontStyle.italic),
-                  ),
-                  backgroundColor: Colors.grey[200],
-                  children: <Widget>[Container(child: _buildListViewDaily())])
+                      children: <Widget>[
+                        Container(child: _buildListViewWeekly())
+                      ])
+                ]),
+              ),
+              Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.8),
+                  border: Border(
+                      bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                ),
+                child: Column(children: <Widget>[
+                  ExpansionTile(
+                      title: Text(
+                        "Monthly",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic),
+                      ),
+                      children: <Widget>[
+                        Container(child: _buildListViewMonthly())
+                      ])
+                ]),
+              ),
             ]),
           ),
-          Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border:
-                  Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
-            ),
-            child: Column(children: <Widget>[
-              ExpansionTile(
-                  title: Text(
-                    "Weekly",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontStyle: FontStyle.italic),
-                  ),
-                  backgroundColor: Colors.grey[200],
-                  children: <Widget>[Container(child: _buildListViewWeekly())])
-            ]),
-          ),
-          Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border:
-                  Border(bottom: BorderSide(width: 2.0, color: Colors.grey)),
-            ),
-            child: Column(children: <Widget>[
-              ExpansionTile(
-                  title: Text(
-                    "Monthly",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontStyle: FontStyle.italic),
-                  ),
-                  backgroundColor: Colors.grey[200],
-                  children: <Widget>[Container(child: _buildListViewMonthly())])
-            ]),
-          ),
-        ])));
+          Positioned(
+              bottom: 80,
+              right: 20,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    onPrimary: Colors.white,
+                    primary: Colors.teal[700].withOpacity(0.8),
+                    onSurface: Colors.grey,
+                    shape: CircleBorder(),
+                    minimumSize: Size(50, 50)),
+                child: Icon(
+                  Icons.add,
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => inputBudget("+")),
+                  );
+                },
+              )),
+          Positioned(
+              bottom: 20,
+              right: 20,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    onPrimary: Colors.white,
+                    primary: Colors.red.withOpacity(0.8),
+                    onSurface: Colors.grey,
+                    shape: CircleBorder(),
+                    minimumSize: Size(50, 50)),
+                child: Icon(
+                  Icons.remove,
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => inputBudget("-")),
+                  );
+                },
+              ))
+        ]));
   }
 }

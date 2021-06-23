@@ -181,7 +181,7 @@ Widget _RowBalance(String string) {
           flex: 1,
           child: Text(
             string,
-            style: TextStyle(fontSize: 20, color: Colors.grey),
+            style: TextStyle(fontSize: 20, color: Colors.black87.withOpacity(0.6)),
           ),
         ),
         Expanded(
@@ -206,7 +206,7 @@ Widget _Row(String string, int num) {
           flex: 1,
           child: Text(
             string,
-            style: TextStyle(fontSize: 20, color: Colors.grey),
+            style: TextStyle(fontSize: 20, color: Colors.black87.withOpacity(0.6)),
           ),
         ),
         Expanded(
@@ -228,7 +228,7 @@ Widget _ExpansionTileIncome(String title) {
         return ExpansionTile(
           title: Text(
             title,
-            style: TextStyle(fontSize: 20, color: Colors.grey),
+            style: TextStyle(fontSize: 20, color: Colors.black87.withOpacity(0.6)),
           ),
           children: <Widget>[
             ListView.separated(
@@ -273,7 +273,7 @@ Widget _ExpansionTileOutcome(String title) {
         return ExpansionTile(
           title: Text(
             title,
-            style: TextStyle(fontSize: 20, color: Colors.grey),
+            style: TextStyle(fontSize: 20, color: Colors.black87.withOpacity(0.6)),
           ),
           children: <Widget>[
             ListView.separated(

@@ -21,7 +21,6 @@ class Debts {
 }
 
 class _DebtState extends State<Debt> {
-
   inputPiutangSaya(BuildContext context) {
     return showDialog(
         context: context,
@@ -163,153 +162,202 @@ class _DebtState extends State<Debt> {
             leading: Icon(Icons.monetization_on_outlined),
             title: Text("Debt"),
             backgroundColor: Colors.teal[700]),
-        body: Column(children: <Widget>[
-          Row(
-            children: <Widget>[
-              Flexible(
-                  flex: 2,
-                  child: ButtonTheme(
-                    minWidth: double.infinity,
+        body: Stack(
+          children: [
+            Container(
+        decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage('assets/images/pattern.png'),  repeat: ImageRepeat.repeat)
+    ),
+              child: Column(children: <Widget>[
+                Container(
+                    color: Colors.black,
                     height: 50,
-                    child: RaisedButton(
-                      onPressed: () {
-                        inputPiutangSaya(context);
-                      },
-                      child: Text(
-                        "Piutang",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      color: Colors.teal[700],
-                    ),
-                  )),
-              Flexible(
-                  flex: 2,
-                  child: ButtonTheme(
-                    minWidth: double.infinity,
-                    height: 50,
-                    child: RaisedButton(
-                      onPressed: () {
-                        inputHutangSaya(context);
-                      },
-                      child: Text(
-                        "Hutang",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      color: Colors.red[900],
-                    ),
-                  )),
-            ],
-          ),
-          Flexible(
-            flex: 1,
-            child: Container(
-              child: ListView.separated(
-                  separatorBuilder: (context, index) => Divider(
-                        color: Colors.grey,
-                        height: 0,
-                      ),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  padding: const EdgeInsets.only(bottom: 8),
-                  itemCount: debtBox.length,
-                  itemBuilder: (context, index) {
-                    int newIndex = debtBox.length - 1 - index;
-                    final debt = debtBox.getAt(newIndex) as DebtList;
-                    return Column(
-                      children: <Widget>[
-                        MyExpansionTile(
-                          title: Container(
-                            alignment: Alignment.centerLeft,
-                            color: Colors.black12,
-                            padding: EdgeInsets.all(8),
-                            height: 50,
-                            width: double.infinity,
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      child: Icon(
-                                        debt.sym == "+"
-                                            ? Icons.attach_money
-                                            : Icons.money_off,
-                                        color: debt.sym == "+"
-                                            ? Colors.teal[700]
-                                            : Colors.red[700],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 6,
-                                    child: Text(
-                                      "${debt.nom}",
-                                      style: TextStyle(
-                                          fontSize: 20, color: Colors.black),
-                                    ),
-                                  ),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        child: Text("|", style: TextStyle(fontSize: 20,color: Colors.grey),),
-                                      )),
-                                  Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          "${debt.name}",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.black),
-                                        ),
-                                      ))
-                                ]),
-                          ),
-                          backgroundColor: Colors.white70,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      width: double.infinity,
-                                    )),
-                                Expanded(
-                                    flex: 18,
-                                    child: ButtonTheme(
-                                      minWidth: double.infinity,
-                                      height: 50,
-                                      child: RaisedButton(
-                                        onPressed: () {
-                                          _deleteDebts(newIndex);
-                                        },
-                                        child: Text(
-                                          debt.sym == "+"
-                                              ? "Sudah dibayar"
-                                              : "Sudah membayar",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 17),
-                                        ),
-                                        color: Colors.grey[700],
-                                      ),
-                                    )),
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      width: double.infinity,
-                                    )),
-                              ],
+                    alignment: Alignment.center,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              width: double.infinity,
                             ),
-                          ],
-                        ),
-                      ],
-                    );
-                  }),
+                          ),
+                          Expanded(
+                            flex: 4,
+                            child: Text(
+                              "Daftar Hutang",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              width: double.infinity,
+                            ),
+                          ),
+                        ])),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+
+                    margin: EdgeInsets.only(top: 5),
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        padding: const EdgeInsets.only(bottom: 8),
+                        itemCount: debtBox.length,
+                        itemBuilder: (context, index) {
+                          int newIndex = debtBox.length - 1 - index;
+                          final debt = debtBox.getAt(newIndex) as DebtList;
+                          return Column(
+                            children: <Widget>[
+                              MyExpansionTile(
+                                title: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: Colors.grey.withOpacity(0.8),
+                                  ),
+                                  alignment: Alignment.centerLeft,
+                                  padding: EdgeInsets.all(8),
+                                  height: 50,
+                                  width: double.infinity,
+                                  child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            child: Icon(
+                                              debt.sym == "+"
+                                                  ? Icons.attach_money
+                                                  : Icons.money_off,
+                                              color: debt.sym == "+"
+                                                  ? Colors.teal[700]
+                                                  : Colors.red[700],
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 6,
+                                          child: Text(
+                                            "${debt.nom}",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "|",
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.grey),
+                                              ),
+                                            )),
+                                        Expanded(
+                                            flex: 3,
+                                            child: Container(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                "${debt.name}",
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black),
+                                              ),
+                                            ))
+                                      ]),
+                                ),
+
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            width: double.infinity,
+                                          )),
+                                      Expanded(
+                                          flex: 18,
+                                          child: ButtonTheme(
+                                            minWidth: double.infinity,
+                                            height: 50,
+                                            child: RaisedButton(
+                                              onPressed: () {
+                                                _deleteDebts(newIndex);
+                                              },
+                                              child: Text(
+                                                debt.sym == "+"
+                                                    ? "Sudah dibayar"
+                                                    : "Sudah membayar",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 17),
+                                              ),
+                                              color: Colors.teal[700],
+                                            ),
+                                          )),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            width: double.infinity,
+                                          )),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        }),
+                  ),
+                )
+              ]),
             ),
-          )
-        ]));
+            Positioned(
+                bottom: 80,
+                right: 20,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      onPrimary: Colors.white,
+                      primary: Colors.teal[700].withOpacity(0.8),
+                      onSurface: Colors.grey,
+                      shape: CircleBorder(),
+                      minimumSize: Size(50, 50)),
+                  child: Icon(
+                    Icons.add,
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    inputPiutangSaya(context);
+                  },
+                )),
+            Positioned(
+                bottom: 20,
+                right: 20,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      onPrimary: Colors.white,
+                      primary: Colors.red.withOpacity(0.8),
+                      onSurface: Colors.grey,
+                      shape: CircleBorder(),
+                      minimumSize: Size(50, 50)),
+                  child: Icon(
+                    Icons.remove,
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    inputHutangSaya(context);
+                  },
+                ))
+          ],
+        ));
   }
 }

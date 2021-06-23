@@ -86,61 +86,62 @@ class _MainPageState extends State<MainPage> {
     var saldo = saldoBox.get(0) as Saldo;
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
           leading: Icon(Icons.account_balance_wallet_rounded),
           title: Text("Dompet.in"),
           backgroundColor: Colors.teal[700]),
       body: Stack(children: [
-        Column(children: <Widget>[
-          Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(left: 15),
-              height: 100,
-              width: double.infinity,
-              color: Colors.black12,
-              child: _showBalance()),
-          Container(
-            height: 50,
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    width: double.infinity,
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Text(
-                    "Transaksi terakhir",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
+       Column(children: <Widget>[
+            Container(
+                alignment: Alignment.topLeft,
+                padding: EdgeInsets.only(left: 25,top: 10),
+                height: 80,
+                width: double.infinity,
+                color: Colors.teal[700],
+                child: _showBalance()),
+            Container(
+              height: 50,
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      width: double.infinity,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                      alignment: Alignment.centerRight,
-                      icon: Icon(Icons.auto_delete),
-                      color: Colors.white,
-                      onPressed: () {
-                        deleteHistory();
-                      }),
-                ),
-              ],
+                  Expanded(
+                    flex: 4,
+                    child: Text(
+                      "Transaksi terakhir",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                        alignment: Alignment.centerRight,
+                        icon: Icon(Icons.auto_delete),
+                        color: Colors.white,
+                        onPressed: () {
+                          deleteHistory();
+                        }),
+                  ),
+                ],
+              ),
+              color: Colors.black,
             ),
-            color: Colors.black,
-          ),
-          Flexible(
-            flex: 1,
-            child: _buildListView(),
-          )
-        ]),
+            Flexible(
+              flex: 1,
+              child: _buildListView(),
+            )
+          ]),
         Positioned(
             bottom: 80,
             right: 20,
@@ -195,7 +196,7 @@ class _MainPageState extends State<MainPage> {
           var balance = saldoBox.getAt(0) as Saldo;
           return Text(
             "Rp ${balance.nom} ,-",
-            style: TextStyle(fontSize: 30),
+            style: TextStyle(fontSize: 30, color: Colors.white),
           );
         });
   }
@@ -204,70 +205,74 @@ class _MainPageState extends State<MainPage> {
     return WatchBoxBuilder(
         box: Hive.box('history'),
         builder: (context, historyBox) {
-          return ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: historyBox.length < 10 ? historyBox.length : 10,
-              itemBuilder: (context, index) {
-                index = historyBox.length - index - 1;
-                final history = historyBox.getAt(index) as History;
-                return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.black12,
-                    ),
-                    alignment: Alignment.centerLeft,
-
-                    padding: EdgeInsets.all(10),
-                    height: 50,
-                    margin: EdgeInsets.all(2),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: history.sym == "+"
-                                  ? Colors.teal[700]
-                                  : Colors.red[700],
-                            ),
-                            child: Icon(
-                              history.sym == "+" ? Icons.add : Icons.remove,
-                              color: Colors.white,
-                            ),
-                            padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 6,
-                          child: Text(
-                            "   ${history.nominal}",
-                            style: TextStyle(fontSize: 20, color: Colors.black),
-                          ),
-                        ),
-                        Expanded(
+          return Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage('assets/images/pattern.png'),  repeat: ImageRepeat.repeat)
+            ),
+            child: ListView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: historyBox.length < 10 ? historyBox.length : 10,
+                itemBuilder: (context, index) {
+                  index = historyBox.length - index - 1;
+                  final history = historyBox.getAt(index) as History;
+                  return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey,
+                      ),
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.all(10),
+                      height: 50,
+                      margin: EdgeInsets.all(10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
                             flex: 1,
                             child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                "|",
-                                style:
-                                TextStyle(fontSize: 20, color: Colors.grey),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: history.sym == "+"
+                                    ? Colors.teal[700]
+                                    : Colors.red[700],
                               ),
-                            )),
-                        Expanded(
-                            flex: 3,
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                "${history.ket.capitalize()}",
-                                style: TextStyle(fontSize: 20),
+                              child: Icon(
+                                history.sym == "+" ? Icons.add : Icons.remove,
+                                color: Colors.white,
                               ),
-                            ))
-                      ],
-                    ));
-              });
+                              padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 6,
+                            child: Text(
+                              "   ${history.nominal}",
+                              style: TextStyle(fontSize: 20, color: Colors.black),
+                            ),
+                          ),
+                          Expanded(
+                              flex: 1,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "|",
+                                  style:
+                                  TextStyle(fontSize: 20, color: Colors.grey),
+                                ),
+                              )),
+                          Expanded(
+                              flex: 3,
+                              child: Container(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  "${history.ket.capitalize()}",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ))
+                        ],
+                      ));
+                }),
+          );
         });
   }
 }
