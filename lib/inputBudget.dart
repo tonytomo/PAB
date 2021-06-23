@@ -3,10 +3,12 @@ import 'package:pab_dompet/classes/budget.dart';
 import 'package:pab_dompet/classes/saldo.dart';
 import 'package:hive/hive.dart';
 import 'package:cron/cron.dart';
+import 'package:workmanager/workmanager.dart';
 
 import 'classes/budget.dart';
 import 'classes/history.dart';
 import 'classes/saldo.dart';
+import 'main.dart';
 
 List <Cron> test =[];
 
@@ -62,52 +64,15 @@ class _inputBudgetState extends State<inputBudget> {
   }
 
   void scheduleDaily(BudgetList budget) {
-    final cron = Cron();
-    test.add(cron);
-    test[test.length-1].schedule(new Schedule.parse('* * * * *'), () async {
-      // Daily
-      // Penambahan saldo dan penambahan transaksi di homepage per hari
-      var balance = saldoBox.getAt(0) as Saldo;
-      if (budget.sym == "+")
-        balance.nom += budget.nom;
-      else if (budget.sym == "-") balance.nom += budget.nom;
-
-      final newHistory = History(budget.sym, budget.nom, budget.ket);
-      addHistory(newHistory);
-
-    });
-
+    // Daily
   }
 
   void scheduleWeekly(BudgetList budget) {
-    final cron = Cron();
-    cron.schedule(new Schedule.parse('0 0 0 0 *'), () async {
-      // Weekly
-      // Penambahan saldo dan penambahan transaksi di homepage per minggu
-      var balance = saldoBox.getAt(0) as Saldo;
-      if (budget.sym == "+")
-        balance.nom += budget.nom;
-      else if (budget.sym == "-") balance.nom += budget.nom;
-
-      final newHistory = History(budget.sym, budget.nom, budget.ket);
-      addHistory(newHistory);
-
-    });
+    // Weekly
   }
 
   void scheduleMonthly(BudgetList budget) {
-    final cron = Cron();
-    cron.schedule(new Schedule.parse('0 0 0 * 0'), () async {
-      // Monthly
-      // Penambahan saldo dan penambahan transaksi di homepage per bulan
-      var balance = saldoBox.getAt(0) as Saldo;
-      if (budget.sym == "+")
-        balance.nom += budget.nom;
-      else if (budget.sym == "-") balance.nom += budget.nom;
-
-      final newHistory = History(budget.sym, budget.nom, budget.ket);
-      addHistory(newHistory);
-    });
+    // Monthly
   }
 
   void _submit() {
@@ -119,13 +84,13 @@ class _inputBudgetState extends State<inputBudget> {
     final newBudget = BudgetList(widget.sym, nom, ket, crDate, _valueChoose);
     if (newBudget.period == "Daily") {
       addBudgetDaily(newBudget);
-      scheduleDaily(newBudget);
+      // scheduleDaily(newBudget);
     } else if (newBudget.period == "Weekly") {
       addBudgetWeekly(newBudget);
-      scheduleWeekly(newBudget);
+      // scheduleWeekly(newBudget);
     } else if (newBudget.period == "Monthly") {
       addBudgetMonthly(newBudget);
-      scheduleMonthly(newBudget);
+      // scheduleMonthly(newBudget);
     }
 
     nom = null;
