@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pab_dompet/budget_page.dart';
-import 'package:pab_dompet/debt_page.dart';
-import 'package:pab_dompet/graph_page.dart';
-import 'package:pab_dompet/home_page.dart';
+import 'budget_page.dart';
+import 'debt_page.dart';
+import 'graph_page.dart';
+import 'home_page.dart';
 
 class Base extends StatefulWidget {
   @override
@@ -28,53 +28,66 @@ class _BaseState extends State<Base> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          leading: Icon(Icons.account_balance_wallet_rounded ),
-          title: Text("Dompet"), backgroundColor: Colors.lightBlue[900]),
       body: PageView(
         controller: _pageController,
         children: _screen,
         onPageChanged: _onPageChanged,
         physics: NeverScrollableScrollPhysics(),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.account_balance_wallet_outlined,
-              color: _selectedIndex == 0 ? Colors.blue : Colors.grey,
+      bottomNavigationBar: Container(
+        color: Color.fromARGB(200, 0, 0, 0),
+        padding: EdgeInsets.all(5),
+        child: BottomNavigationBar(
+          backgroundColor: Colors.transparent,
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_balance_wallet_outlined,
+                color: _selectedIndex == 0 ? Colors.teal[700] : Colors.grey[400],
+              ),
+              title: Text("Home",
+                  style: TextStyle(
+                      color: _selectedIndex == 0
+                          ? Colors.teal[700]
+                          : Colors.grey[400])),
             ),
-            title: Text("Home",
-                style: TextStyle(
-                    color: _selectedIndex == 0 ? Colors.blue : Colors.grey)),
-          ),
-          BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(
                 Icons.calculate_outlined,
-                color: _selectedIndex == 1 ? Colors.blue : Colors.grey,
+                color: _selectedIndex == 1 ? Colors.teal[700] : Colors.grey[400],
               ),
               title: Text("Budget",
                   style: TextStyle(
-                      color: _selectedIndex == 1 ? Colors.blue : Colors.grey))),
-          BottomNavigationBarItem(
+                      color: _selectedIndex == 1
+                          ? Colors.teal[700]
+                          : Colors.grey[400])),
+            ),
+            BottomNavigationBarItem(
               icon: Icon(
                 Icons.monetization_on_outlined,
-                color: _selectedIndex == 2 ? Colors.blue : Colors.grey,
+                color: _selectedIndex == 2 ? Colors.teal[700] : Colors.grey[400],
               ),
               title: Text("Debt",
                   style: TextStyle(
-                      color: _selectedIndex == 2 ? Colors.blue : Colors.grey))),
-          BottomNavigationBarItem(
+                      color: _selectedIndex == 2
+                          ? Colors.teal[700]
+                          : Colors.grey[400])),
+            ),
+            BottomNavigationBarItem(
               icon: Icon(
                 Icons.insert_chart_outlined_rounded,
-                color: _selectedIndex == 3 ? Colors.blue : Colors.grey,
+                color: _selectedIndex == 3 ? Colors.teal[700] : Colors.grey[400],
               ),
               title: Text("Graph",
                   style: TextStyle(
-                      color: _selectedIndex == 3 ? Colors.blue : Colors.grey))),
-        ],
+                      color: _selectedIndex == 3
+                          ? Colors.teal[700]
+                          : Colors.grey[400])),
+            ),
+          ],
+        ),
       ),
     );
   }

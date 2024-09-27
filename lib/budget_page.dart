@@ -1,71 +1,115 @@
 import 'package:flutter/material.dart';
-import 'package:pab_dompet/home_page.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'home_page.dart';
+import 'inputBudget.dart';
+import 'package:cron/cron.dart';
+
+import 'classes/budget.dart';
+import 'classes/budget.dart';
+import 'classes/history.dart';
+import 'classes/saldo.dart';
+import 'classes/budget.dart';
+
+import 'customExtensions/ExpansionTile_alt.dart';
 
 class Budget extends StatefulWidget {
   @override
   _BudgetState createState() => _BudgetState();
 }
 
-class Cash {
-  Cash(this._nomBudget, this._ketBudget, this._symBudget);
-
-  int _nomBudget;
-  String _ketBudget;
-  String _symBudget;
-}
-
 class _BudgetState extends State<Budget> {
-  List<Cash> _budgetDaily = [];
-  List<Cash> _budgetWeekly = [];
-  List<Cash> _budgetMonthly = [];
-  String _valueChoose;
-  List _periode = ["Daily", "Weekly", "Monthly"];
+  int plus;
+  String ket;
+
+  final budgetDailyBox = Hive.box('budgetdaily');
+  final budgetWeeklyBox = Hive.box('budgetweekly');
+  final budgetMonthlyBox = Hive.box('budgetmonthly');
+  final historyBox = Hive.box('history');
+
+  void deleteDailyBudget(int index) {
+    budgetDailyBox.deleteAt(index);
+  }
+
+  void deleteWeeklyBudget(int index) {
+    budgetWeeklyBox.deleteAt(index);
+  }
+
+  void deleteMonthlyBudget(int index) {
+    budgetMonthlyBox.deleteAt(index);
+  }
 
   _edit(String period, BuildContext context, int index) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Masukan Jumlah Pemasukan"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Pemasukan',
+            title: Text("Edit Budget"),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Nominal',
+                    ),
+                    onChanged: (String value) {
+                      plus = int.parse(value);
+                    },
                   ),
-                  onChanged: (String value) {
-                    plus = int.parse(value);
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Keterangan',
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Keterangan',
+                    ),
+                    onChanged: (String value2) {
+                      ket = value2;
+                    },
                   ),
-                  onChanged: (String value2) {
-                    ket = value2;
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
             actions: <Widget>[
               MaterialButton(
                 child: Text("Simpan"),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  setState(() {});
-                  if (period == "Daily"){
-                    _budgetDaily[index]._nomBudget=plus;
-                    _budgetDaily[index]._ketBudget=ket;}
-                  //  budgetDaily.add(Cash(plus, ket, "+"));
-                  else if (period == "Weekly")
-                  {
-                    _budgetWeekly[index]._nomBudget=plus;
-                    _budgetWeekly[index]._ketBudget=ket;}
-                  else if (period == "Monthly")
-                  {
-                    _budgetMonthly[index]._nomBudget=plus;
-                    _budgetMonthly[index]._ketBudget=ket;}
+                  setState(() {
+                    if (plus != null) {
+                      if (period == "Daily") {
+                        final budget1 =
+                            budgetDailyBox.getAt(index) as BudgetList;
+                        budget1.nom = plus;
+                      } else if (period == "Weekly") {
+                        final budget2 =
+                            budgetWeeklyBox.getAt(index) as BudgetList;
+                        budget2.nom = plus;
+                      } else if (period == "Monthly") {
+                        final budget3 =
+                            budgetMonthlyBox.getAt(index) as BudgetList;
+                        budget3.nom = plus;
+                      }
+                    }
+                    if (ket != null) {
+                      if (period == "Daily") {
+                        final budget1 =
+                            budgetDailyBox.getAt(index) as BudgetList;
+                        budget1.ket = ket;
+                      } else if (period == "Weekly") {
+                        final budget2 =
+                            budgetWeeklyBox.getAt(index) as BudgetList;
+                        budget2.ket = ket;
+                      } else if (period == "Monthly") {
+                        final budget3 =
+                            budgetMonthlyBox.getAt(index) as BudgetList;
+                        budget3.nom = plus;
+                        budget3.ket = ket;
+                      }
+                    }
+
+                    plus = null;
+                    ket = null;
+                  });
                 },
               )
             ],
@@ -74,285 +118,616 @@ class _BudgetState extends State<Budget> {
   }
 
   _deleteDaily(int index) {
-    _budgetDaily.removeAt(index);
-    setState(() {});
-  }
-
-
-  _deleteWeekly(int index) {
-    _budgetWeekly.removeAt(index);
-    setState(() {});
-  }
-
-
-  _deleteMonthly(int index) {
-    _budgetMonthly.removeAt(index);
-    setState(() {});
-  }
-
-  inputIncomePeriodly(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Masukan Jumlah Pemasukan"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Pemasukan',
-                  ),
-                  onChanged: (String value) {
-                    plus = int.parse(value);
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Keterangan',
-                  ),
-                  onChanged: (String value2) {
-                    ket = value2;
-                  },
-                ),
-                DropdownButtonFormField(
-                  hint: Text("Periode"),
-                  value: _valueChoose,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _valueChoose = newValue;
-                    });
-                  },
-                  items: _periode.map((valueItem) {
-                    return DropdownMenuItem(
-                      value: valueItem,
-                      child: Text(valueItem),
-                    );
-                  }).toList(),
-                )
-              ],
-            ),
+            title: Text("Anda yakin ingin menghapus?"),
             actions: <Widget>[
-              MaterialButton(
-                child: Text("Simpan"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    if (_valueChoose == "Daily")
-                      _budgetDaily.add(Cash(plus, ket, "+"));
-                    else if (_valueChoose == "Weekly")
-                      _budgetWeekly.add(Cash(plus, ket, "+"));
-                    else if (_valueChoose == "Monthly")
-                      _budgetMonthly.add(Cash(plus, ket, "+"));
-                  });
-                },
+              Row(
+                children: <Widget>[
+                  MaterialButton(
+                    child: Text(
+                      "Tidak",
+                      style: TextStyle(
+                        color: Colors.teal[700],
+                      ),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  MaterialButton(
+                    child: Text(
+                      "Iya",
+                      style: TextStyle(
+                        color: Colors.red[700],
+                      ),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    onPressed: () {
+                      budgetDailyBox.deleteAt(index);
+                      // test[index].close();
+                      // test.removeAt(index);
+                      setState(() {});
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               )
             ],
           );
         });
   }
 
-  inputOutcomePeriodly(BuildContext context) {
+  _deleteWeekly(int index) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Masukan Jumlah Pemasukan"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Pemasukan',
-                  ),
-                  onChanged: (String value) {
-                    plus = int.parse(value);
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Keterangan',
-                  ),
-                  onChanged: (String value2) {
-                    ket = value2;
-                  },
-                ),
-                DropdownButtonFormField(
-                  hint: Text("Periode"),
-                  value: _valueChoose,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _valueChoose = newValue;
-                    });
-                  },
-                  items: _periode.map((valueItem) {
-                    return DropdownMenuItem(
-                      value: valueItem,
-                      child: Text(valueItem),
-                    );
-                  }).toList(),
-                )
-              ],
-            ),
+            title: Text("Anda yakin ingin menghapus?"),
             actions: <Widget>[
-              MaterialButton(
-                child: Text("Simpan"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    if (_valueChoose == "Daily")
-                      _budgetDaily.add(Cash(plus, ket, "-"));
-                    else if (_valueChoose == "Weekly")
-                      _budgetWeekly.add(Cash(plus, ket, "-"));
-                    else if (_valueChoose == "Monthly")
-                      _budgetMonthly.add(Cash(plus, ket, "-"));
-                  });
-                },
+              Row(
+                children: <Widget>[
+                  MaterialButton(
+                    child: Text(
+                      "Tidak",
+                      style: TextStyle(
+                        color: Colors.teal[700],
+                      ),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  MaterialButton(
+                    child: Text(
+                      "Iya",
+                      style: TextStyle(
+                        color: Colors.red[700],
+                      ),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    onPressed: () {
+                      budgetWeeklyBox.deleteAt(index);
+                      setState(() {});
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               )
             ],
           );
+        });
+  }
+
+  _deleteMonthly(int index) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Anda yakin ingin menghapus?"),
+            actions: <Widget>[
+              Row(
+                children: <Widget>[
+                  MaterialButton(
+                    child: Text(
+                      "Tidak",
+                      style: TextStyle(
+                        color: Colors.teal[700],
+                      ),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  MaterialButton(
+                    child: Text(
+                      "Iya",
+                      style: TextStyle(
+                        color: Colors.red[700],
+                      ),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    onPressed: () {
+                      budgetMonthlyBox.deleteAt(index);
+                      setState(() {});
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              )
+            ],
+          );
+        });
+  }
+
+  Widget _buildListViewDaily() {
+    return WatchBoxBuilder(
+        box: Hive.box('budgetdaily'),
+        builder: (context, budgetDailyBox) {
+          return ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                    color: Colors.grey,
+                    height: 0,
+                  ),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.only(bottom: 8),
+              itemCount: budgetDailyBox.length,
+              itemBuilder: (context, index) {
+                index = budgetDailyBox.length - 1 - index;
+                var budget = budgetDailyBox.getAt(index) as BudgetList;
+                return Column(
+                  children: <Widget>[
+                    MyExpansionTile(
+                      title: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(8),
+                        height: 50,
+                        width: double.infinity,
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  child: Icon(
+                                    budget.sym == "+"
+                                        ? Icons.add_circle_outline_outlined
+                                        : Icons.remove_circle_outline,
+                                    color: budget.sym == "+"
+                                        ? Colors.teal[700]
+                                        : Colors.red[700],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 6,
+                                child: Text(
+                                  "   ${budget.nom}",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "|",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.grey),
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "${budget.ket}",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                    ),
+                                  ))
+                            ]),
+                      ),
+                      backgroundColor: Colors.white,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      if (budget.period == "Daily")
+                                        _deleteDaily(index);
+                                      else if (budget.period == "Weekly")
+                                        _deleteWeekly(index);
+                                      else if (budget.period == "Monthly")
+                                        _deleteMonthly(index);
+                                    },
+                                    child:
+                                        Icon(Icons.delete, color: Colors.white),
+                                    color: Colors.red[700],
+                                  ),
+                                )),
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      _edit(budget.period, context, index);
+                                    },
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    color: Colors.teal[700],
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              });
+        });
+  }
+
+  Widget _buildListViewWeekly() {
+    return WatchBoxBuilder(
+        box: Hive.box('budgetweekly'),
+        builder: (context, budgetWeeklyBox) {
+          return ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                    color: Colors.grey,
+                    height: 0,
+                  ),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.only(bottom: 8),
+              itemCount: budgetWeeklyBox.length,
+              itemBuilder: (context, index) {
+                // index = budgetWeeklyBox.length - 1 - index;
+                var budget = budgetWeeklyBox.getAt(index) as BudgetList;
+                return Column(
+                  children: <Widget>[
+                    MyExpansionTile(
+                      title: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(8),
+                        height: 50,
+                        width: double.infinity,
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  child: Icon(
+                                    budget.sym == "+"
+                                        ? Icons.add_circle_outline_outlined
+                                        : Icons.remove_circle_outline,
+                                    color: budget.sym == "+"
+                                        ? Colors.teal[700]
+                                        : Colors.red[700],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 6,
+                                child: Text(
+                                  "   ${budget.nom}",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "|",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.grey),
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "${budget.ket}",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                    ),
+                                  ))
+                            ]),
+                      ),
+                      backgroundColor: Colors.white,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      if (budget.period == "Daily")
+                                        _deleteDaily(index);
+                                      else if (budget.period == "Weekly")
+                                        _deleteWeekly(index);
+                                      else if (budget.period == "Monthly")
+                                        _deleteMonthly(index);
+                                    },
+                                    child:
+                                        Icon(Icons.delete, color: Colors.white),
+                                    color: Colors.red[700],
+                                  ),
+                                )),
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      _edit(budget.period, context, index);
+                                    },
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    color: Colors.teal[700],
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              });
+        });
+  }
+
+  Widget _buildListViewMonthly() {
+    return WatchBoxBuilder(
+        box: Hive.box('budgetmonthly'),
+        builder: (context, budgetMonthlyBox) {
+          return ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                    color: Colors.grey,
+                    height: 0,
+                  ),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.only(bottom: 8),
+              itemCount: budgetMonthlyBox.length,
+              itemBuilder: (context, index) {
+                index = budgetMonthlyBox.length - 1 - index;
+                var budget = budgetMonthlyBox.getAt(index) as BudgetList;
+                return Column(
+                  children: <Widget>[
+                    MyExpansionTile(
+                      title: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(8),
+                        height: 50,
+                        width: double.infinity,
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  child: Icon(
+                                    budget.sym == "+"
+                                        ? Icons.add_circle_outline_outlined
+                                        : Icons.remove_circle_outline,
+                                    color: budget.sym == "+"
+                                        ? Colors.teal[700]
+                                        : Colors.red[700],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 6,
+                                child: Text(
+                                  "   ${budget.nom}",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "|",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.grey),
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "${budget.ket}",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                    ),
+                                  ))
+                            ]),
+                      ),
+                      backgroundColor: Colors.white,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      if (budget.period == "Daily")
+                                        _deleteDaily(index);
+                                      else if (budget.period == "Weekly")
+                                        _deleteWeekly(index);
+                                      else if (budget.period == "Monthly")
+                                        _deleteMonthly(index);
+                                    },
+                                    child:
+                                        Icon(Icons.delete, color: Colors.white),
+                                    color: Colors.red[700],
+                                  ),
+                                )),
+                            Flexible(
+                                flex: 2,
+                                child: ButtonTheme(
+                                  minWidth: double.infinity,
+                                  height: 50,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      _edit(budget.period, context, index);
+                                    },
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    color: Colors.teal[700],
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              });
         });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(children: <Widget>[
-      Row(
-        children: <Widget>[
-          Flexible(
-              flex: 2,
-              child: ButtonTheme(
-                minWidth: double.infinity,
-                height: 50,
-                child: RaisedButton(
-                  onPressed: () {
-                    inputIncomePeriodly(context);
-                    print(_budgetDaily[0]._nomBudget);
-                  },
-                  child: Text("+"),
-                  color: Colors.green,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+            leading: Icon(Icons.calculate_outlined),
+            title: Text("Budget"),
+            backgroundColor: Colors.teal[700]),
+        body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/pattern.png'),
+                  repeat: ImageRepeat.repeat),
+            ),
+            child: ListView(children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.8),
+                  border: Border(
+                      bottom: BorderSide(width: 2.0, color: Colors.grey)),
                 ),
-              )),
-          Flexible(
-              flex: 2,
-              child: ButtonTheme(
-                minWidth: double.infinity,
-                height: 50,
-                child: RaisedButton(
-                  onPressed: () {
-                    inputOutcomePeriodly(context);
-                  },
-                  child: Text("-"),
-                  color: Colors.red,
+                child: Column(children: <Widget>[
+                  ExpansionTile(
+                      title: Text(
+                        "Daily",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic),
+                      ),
+                      children: <Widget>[
+                        Container(child: _buildListViewDaily())
+                      ])
+                ]),
+              ),
+              Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.8),
+                  border: Border(
+                      bottom: BorderSide(width: 2.0, color: Colors.grey)),
                 ),
+                child: Column(children: <Widget>[
+                  ExpansionTile(
+                      title: Text(
+                        "Weekly",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic),
+                      ),
+                      children: <Widget>[
+                        Container(child: _buildListViewWeekly())
+                      ])
+                ]),
+              ),
+              Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.8),
+                  border: Border(
+                      bottom: BorderSide(width: 2.0, color: Colors.grey)),
+                ),
+                child: Column(children: <Widget>[
+                  ExpansionTile(
+                      title: Text(
+                        "Monthly",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic),
+                      ),
+                      children: <Widget>[
+                        Container(child: _buildListViewMonthly())
+                      ])
+                ]),
+              ),
+            ]),
+          ),
+          Positioned(
+              bottom: 80,
+              right: 20,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    onPrimary: Colors.white,
+                    primary: Colors.teal[700].withOpacity(0.8),
+                    onSurface: Colors.grey,
+                    shape: CircleBorder(),
+                    minimumSize: Size(50, 50)),
+                child: Icon(
+                  Icons.add,
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => inputBudget("+")),
+                  );
+                },
               )),
-        ],
-      ),
-      Container(
-          height: 50,
-          color: Colors.grey,
-          alignment: Alignment.center,
-          child: Text("Per Hari", style: TextStyle(fontSize: 20))),
-      Flexible(
-        flex: 1,
-        child: Container(
-            child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                //   reverse: true,
-                itemCount: _budgetDaily.length,
-                itemBuilder: (context, index) {
-                  int newIndex = _budgetDaily.length - 1 - index;
-                  String period = "Daily";
-                  return GestureDetector(
-                    onLongPress: () => _edit(period,context, newIndex),
-                    onHorizontalDragEnd: (test) => _deleteDaily(newIndex),
-                    child: Container(
-                        alignment: Alignment.centerLeft,
-                        color: Colors.black12,
-                        padding: EdgeInsets.all(8),
-                        height: 50,
-                        margin: EdgeInsets.all(2),
-                        child: Text(
-                          "${_budgetDaily[newIndex]._symBudget} ${_budgetDaily[newIndex]._nomBudget} ${_budgetDaily[newIndex]._ketBudget}",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: _budgetDaily[newIndex]._symBudget == "+"
-                                  ? Colors.green
-                                  : Colors.red),
-                        )),
+          Positioned(
+              bottom: 20,
+              right: 20,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    onPrimary: Colors.white,
+                    primary: Colors.red.withOpacity(0.8),
+                    onSurface: Colors.grey,
+                    shape: CircleBorder(),
+                    minimumSize: Size(50, 50)),
+                child: Icon(
+                  Icons.remove,
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => inputBudget("-")),
                   );
-                })),
-      ),
-      Container(
-          height: 50,
-          color: Colors.grey,
-          alignment: Alignment.center,
-          child: Text("Per Minggu", style: TextStyle(fontSize: 20))),
-      Flexible(
-        flex: 1,
-        child: Container(
-            child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                //   reverse: true,
-                itemCount: _budgetWeekly.length,
-                itemBuilder: (context, index) {
-                  int newIndex = _budgetWeekly.length - 1 - index;
-                  String period="Weekly";
-                  return GestureDetector(
-                    onLongPress: () => _edit(period,context, newIndex),
-                    onHorizontalDragEnd: (test) => _deleteWeekly(newIndex),
-                    child: Container(
-                        alignment: Alignment.centerLeft,
-                        color: Colors.black12,
-                        padding: EdgeInsets.all(8),
-                        height: 50,
-                        margin: EdgeInsets.all(2),
-                        child: Text(
-                          "${_budgetWeekly[newIndex]._symBudget} ${_budgetWeekly[newIndex]._nomBudget} ${_budgetWeekly[newIndex]._ketBudget}",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: _budgetWeekly[newIndex]._symBudget == "+"
-                                  ? Colors.green
-                                  : Colors.red),
-                        )),
-                  );
-                })),
-      ),
-      Container(
-          height: 50,
-          color: Colors.grey,
-          alignment: Alignment.center,
-          child: Text("Per Bulan", style: TextStyle(fontSize: 20))),
-      Flexible(
-        child: Container(
-            child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                //   reverse: true,
-                itemCount: _budgetMonthly.length,
-                itemBuilder: (context, index) {
-                  int newIndex = _budgetMonthly.length - 1 - index;
-                  String period = "Monthly";
-                  return GestureDetector(
-                    onLongPress: () => _edit(period,context, newIndex),
-                    onHorizontalDragEnd: (test) => _deleteMonthly(newIndex),
-                    child: Container(
-                        alignment: Alignment.centerLeft,
-                        color: Colors.black12,
-                        padding: EdgeInsets.all(8),
-                        height: 50,
-                        margin: EdgeInsets.all(2),
-                        child: Text(
-                          "${_budgetMonthly[newIndex]._symBudget} ${_budgetMonthly[newIndex]._nomBudget} ${_budgetMonthly[newIndex]._ketBudget}",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: _budgetMonthly[newIndex]._symBudget == "+"
-                                  ? Colors.green
-                                  : Colors.red),
-                        )),
-                  );
-                })),
-      ),
-    ]));
+                },
+              ))
+        ]));
   }
 }

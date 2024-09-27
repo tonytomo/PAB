@@ -1,107 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-var plus=0;
+import 'classes/history.dart';
+import 'classes/saldo.dart';
+import 'classes/history.dart';
+import 'inputPendapatan.dart';
+import 'customExtensions/string_operation.dart';
 
-var saldo=0;
-
-String ket="";
+var plus = 0;
+String ket = "";
 
 class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
 }
 
-class History {
-  History(this._nom, this._ket, this._sym);
-
-  int _nom;
-  String _sym;
-  String _ket;
-}
-
 class _MainPageState extends State<MainPage> {
-  List<History> _history = [];
-
-  inputOutcome(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Masukan Jumlah Pengeluaran"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Pengeluaran',
-                  ),
-                  onChanged: (String value) {
-                    plus = int.parse(value);
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Keterangan',
-                  ),
-                  onChanged: (String value2) {
-                    ket = value2;
-                  },
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              MaterialButton(
-                child: Text("Simpan"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    saldo = saldo - plus;
-                    _history.add(History(plus, ket, "-"));
-                  });
-                },
-              )
-            ],
-          );
-        });
+  @override
+  void initState() {
+    super.initState();
+    plus = null;
+    ket = null;
   }
 
-  inputIncome(BuildContext context) {
-    return showDialog(
+  final historyBox = Hive.box('history');
+  final saldoBox = Hive.box('saldo');
+
+  void currentSaldo(Saldo saldo) {
+    saldoBox.putAt(0, saldo);
+  }
+
+  void deleteHistory() {
+    showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Masukan Jumlah Pemasukan"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
+            title: Column(
               children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Pemasukan',
-                  ),
-                  onChanged: (String value) {
-                    plus = int.parse(value);
-                  },
+                Text(
+                  "Anda yakin ingin menghapus?",
+                  style: TextStyle(fontSize: 20),
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Keterangan',
-                  ),
-                  onChanged: (String value2) {
-                    ket = value2;
-                  },
-                ),
+                Text(
+                  "!Riwayat dan catatan income/outcome akan terhapus!",
+                  style: TextStyle(color: Colors.red, fontSize: 14),
+                  textAlign: TextAlign.center,
+                )
               ],
             ),
             actions: <Widget>[
-              MaterialButton(
-                child: Text("Simpan"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    saldo = saldo + plus;
-                    _history.add(History(plus, ket, "+"));
-                  });
-                },
+              Row(
+                children: <Widget>[
+                  MaterialButton(
+                    child: Text(
+                      "Tidak",
+                      style: TextStyle(color: Colors.teal[700], fontSize: 17),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  MaterialButton(
+                    child: Text(
+                      "Iya",
+                      style: TextStyle(color: Colors.red[700], fontSize: 17),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    onPressed: () {
+                      historyBox.deleteAll(historyBox.keys);
+                      setState(() {});
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               )
             ],
           );
@@ -110,80 +83,196 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    var saldo = saldoBox.get(0) as Saldo;
     return Scaffold(
-      body: Column(children: <Widget>[
-        Container(
-          alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(left: 15),
-          height: 100,
-          width: double.infinity,
-          color: Colors.black12,
-          child: Text(
-            "Rp " + saldo.toString() + ",-",
-            style: TextStyle(fontSize: 30),
-          ),
-        ),
-        Row(
-          children: <Widget>[
-            Flexible(
-                flex: 2,
-                child: ButtonTheme(
-                  minWidth: double.infinity,
-                  height: 50,
-                  child: RaisedButton(
-                    onPressed: () {
-                      inputIncome(context);
-                    },
-                    child: Text("+"),
-                    color: Colors.green,
+      appBar: AppBar(
+        elevation: 0,
+          leading: Icon(Icons.account_balance_wallet_rounded),
+          title: Text("Dompet.in"),
+          backgroundColor: Colors.teal[700]),
+      body: Stack(children: [
+       Column(children: <Widget>[
+            Container(
+                alignment: Alignment.topLeft,
+                padding: EdgeInsets.only(left: 25,top: 10),
+                height: 80,
+                width: double.infinity,
+                color: Colors.teal[700],
+                child: _showBalance()),
+            Container(
+              height: 50,
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      width: double.infinity,
+                    ),
                   ),
-                )),
-            Flexible(
-                flex: 2,
-                child: ButtonTheme(
-                  minWidth: double.infinity,
-                  height: 50,
-                  child: RaisedButton(
-                    onPressed: () {
-                      inputOutcome(context);
-                    },
-                    child: Text("-"),
-                    color: Colors.red,
+                  Expanded(
+                    flex: 4,
+                    child: Text(
+                      "Transaksi terakhir",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ))
-          ],
-        ),
-        Container(
-          height: 50,
-          alignment: Alignment.center,
-          child: Text("Transaksi terakhir",
-              style: TextStyle(fontSize: 20, color: Colors.white)),
-          color: Colors.black,
-        ),
-        Flexible(
-            flex: 1,
-            child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                //   reverse: true,
-                itemCount: _history.length < 10 ? _history.length : 10,
-                itemBuilder: (context, index) {
-                  int newIndex = _history.length - 1 - index;
-                  return Container(
-                      alignment: Alignment.centerLeft,
-                      color: Colors.black12,
-                      padding: EdgeInsets.all(8),
-                      height: 50,
-                      margin: EdgeInsets.all(2),
-                      child: Text(
-                        "${_history[newIndex]._sym} ${_history[newIndex]._nom} ${_history[newIndex]._ket}",
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: _history[newIndex]._sym == "+"
-                                ? Colors.green
-                                : Colors.red),
-                      ));
-                }))
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                        alignment: Alignment.centerRight,
+                        icon: Icon(Icons.auto_delete),
+                        color: Colors.white,
+                        onPressed: () {
+                          deleteHistory();
+                        }),
+                  ),
+                ],
+              ),
+              color: Colors.black,
+            ),
+            Flexible(
+              flex: 1,
+              child: _buildListView(),
+            )
+          ]),
+        Positioned(
+            bottom: 80,
+            right: 20,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  onPrimary: Colors.white,
+                  primary: Colors.teal[700].withOpacity(0.8),
+                  onSurface: Colors.grey,
+                  shape: CircleBorder(),
+                  minimumSize: Size(50, 50)),
+              child: Icon(
+                Icons.add,
+                size: 30,
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => inputPendapatan(plus, ket, "+")));
+              },
+            )),
+        Positioned(
+            bottom: 20,
+            right: 20,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  onPrimary: Colors.white,
+                  primary: Colors.red.withOpacity(0.8),
+                  onSurface: Colors.grey,
+                  shape: CircleBorder(),
+                  minimumSize: Size(50, 50)),
+              child: Icon(
+                Icons.remove,
+                size: 30,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => inputPendapatan(plus, ket, "-")),
+                );
+              },
+            ))
       ]),
     );
+  }
+
+  Widget _showBalance() {
+    return WatchBoxBuilder(
+        box: Hive.box('saldo'),
+        builder: (context, saldoBox) {
+          var balance = saldoBox.getAt(0) as Saldo;
+          return Text(
+            "Rp ${balance.nom} ,-",
+            style: TextStyle(fontSize: 30, color: Colors.white),
+          );
+        });
+  }
+
+  Widget _buildListView() {
+    return WatchBoxBuilder(
+        box: Hive.box('history'),
+        builder: (context, historyBox) {
+          return Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage('assets/images/pattern.png'),  repeat: ImageRepeat.repeat)
+            ),
+            child: ListView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: historyBox.length < 10 ? historyBox.length : 10,
+                itemBuilder: (context, index) {
+                  index = historyBox.length - index - 1;
+                  final history = historyBox.getAt(index) as History;
+                  return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey,
+                      ),
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.all(10),
+                      height: 50,
+                      margin: EdgeInsets.all(10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: history.sym == "+"
+                                    ? Colors.teal[700]
+                                    : Colors.red[700],
+                              ),
+                              child: Icon(
+                                history.sym == "+" ? Icons.add : Icons.remove,
+                                color: Colors.white,
+                              ),
+                              padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 6,
+                            child: Text(
+                              "   ${history.nominal}",
+                              style: TextStyle(fontSize: 20, color: Colors.black),
+                            ),
+                          ),
+                          Expanded(
+                              flex: 1,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "|",
+                                  style:
+                                  TextStyle(fontSize: 20, color: Colors.grey),
+                                ),
+                              )),
+                          Expanded(
+                              flex: 3,
+                              child: Container(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  "${history.ket.capitalize()}",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ))
+                        ],
+                      ));
+                }),
+          );
+        });
   }
 }
